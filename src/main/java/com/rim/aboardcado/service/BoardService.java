@@ -41,4 +41,18 @@ public class BoardService {
         }
         return boardDtoList;
     }
+
+    @Transactional
+    public BoardDto postDtl(Long id) {
+        Board board = boardRepository.findById(id).get();
+
+        BoardDto boardDto = BoardDto.builder()
+                .id(board.getId())
+                .author(board.getAuthor())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .createdDate(board.getCreatedDate())
+                .build();
+        return boardDto;
+    }
 }
