@@ -22,10 +22,12 @@ public class BoardController {
 
 //    public BoardController(BoardService boardService) {
 //        this.boardService = boardService;
-//    }
+//    } @AllArgsConstructor 로 생성자 생성 대체
 
     @GetMapping("/")
-    public String list() {
+    public String list(Model model) {
+        List<BoardDto> boardDtoList = boardService.getBoardList();
+        model.addAttribute("postList", boardDtoList);
         return "board/list";
     }
 
@@ -40,10 +42,4 @@ public class BoardController {
         return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<BoardDto> boardDtoList = boardService.getBoardList();
-        model.addAttribute("postList", boardDtoList);
-        return "board/list";
-    }
 }
