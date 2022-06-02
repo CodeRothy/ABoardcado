@@ -34,13 +34,14 @@ public class BoardController {
 
     @GetMapping("/post")
     public String post() {
+
         return "board/post";
     }
 
     @PostMapping("/post")
     public String write(BoardDto boardDto) {
         boardService.savePost(boardDto);
-        return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
+        return "redirect:/post"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
     @GetMapping("/post/{id}")
