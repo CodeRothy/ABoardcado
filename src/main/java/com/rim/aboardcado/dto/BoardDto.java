@@ -5,9 +5,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Builder
+@Getter
 @ToString
-@NoArgsConstructor
 public class BoardDto {
     private Long id;
     private String author;
@@ -26,13 +26,4 @@ public class BoardDto {
         return build;
     }
 
-    @Builder
-    public BoardDto(Long id, String author, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-        this.id = id;
-        this.author = author;
-        this.title = title;
-        this.content = content;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-    }
 }
