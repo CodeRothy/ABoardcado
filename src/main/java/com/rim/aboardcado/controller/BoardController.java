@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class BoardController {
     @PostMapping("/post")
     public String write(BoardDto boardDto) {
         boardService.savePost(boardDto);
-        return "redirect:/post"; // redirect 경로 확인 (requestMapping /board 포함하는지)
+        return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
     @GetMapping("/post/{id}")
@@ -49,6 +46,19 @@ public class BoardController {
         BoardDto boardDto = boardService.postDtl(id);
         model.addAttribute("post", boardDto);
         return "board/detail";
+    }
+
+    @GetMapping("/post/edit/{id}")
+    public String edit(@PathVariable("id") Long id, Model model){
+        BoardDto boardDto = boardService.postDtl(id);
+        model.addAttribute("post", boardDto);
+        return "board/edit";
+    }
+
+    @PutMapping("/post/edit/{id}")
+    public String update(BoardDto boardDto) {
+        boardService.savePost(boardDto);
+        return "redirect:/post/{id}";
     }
 
 }
