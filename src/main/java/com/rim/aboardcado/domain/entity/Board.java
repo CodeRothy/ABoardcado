@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Board {
 
     @Id
@@ -36,11 +36,4 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-//    @Builder
-//    public Board(Long id, String author, String title, String content) {
-//        this.id = id;
-//        this.author = author;
-//        this.title = title;
-//        this.content = content;
-//    }
 }
