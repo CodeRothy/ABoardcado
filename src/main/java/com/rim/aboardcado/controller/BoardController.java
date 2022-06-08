@@ -34,9 +34,12 @@ public class BoardController {
 //        return "board/list";
 //    }
     @GetMapping("/")
-    public String listPage(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
-        Page<Board> boardList = boardService.getBoardList(pageable);
-        model.addAttribute("boardList", boardList);
+    public String list(@RequestParam(value = "page",defaultValue = "1") Integer pageNum, Model model) {
+        List<BoardDto> boardDtoList = boardService.getBoardList(pageNum);
+        Integer[] pageList = boardService.getPageList(pageNum);
+
+        model.addAttribute("boardList", boardDtoList);
+        model.addAttribute("pageList", pageList);
 
         return "board/list";
     }

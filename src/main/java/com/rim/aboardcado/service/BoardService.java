@@ -18,7 +18,10 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class BoardService {
+
     private BoardRepository boardRepository;
+    private static final int BLOCK_PAGE_NUM_COUNT = 5; // 페이지 블럭 수
+    private static final int PAGE_POST_COUNT = 5; // 페이지 당 게시물 수
 
     // 글 작성 저장
     @Transactional
@@ -29,13 +32,61 @@ public class BoardService {
 
     // 글 리스트
     @Transactional
-    public Page<Board> getBoardList(Pageable pageable) {
-//        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1); // page는 index 처럼 0부터 시작
-//        pageable = PageRequest.of(page, 10);
+    public List<BoardDto> getBoardList(Integer pageNum) {
+        Page<Board> page = boardRepository
+                .findAll(PageRequest
+                        .of(pageNum-1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "id")));
 
+        List<Board> boards = page.getContent();
+        List<BoardDto> boardDtoList = new ArrayList<>();
 
-        return boardRepository.findAll(pageable);
+        for (Board board : boards) {
+            boardDtoList.add(this.toEntity(board));
+        }
+        return boardDtoList;
     }
+
+    private BoardDto toEntity(Board board) {
+        return BoardDto.builder()
+                    .id(board.getId())
+                    .author(board.getAuthor())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .createdDate(board.getCreatedDate())
+                    .build();
+
+    }
+
+    @Transactional
+    public Long getBoardCount() {
+        return boardRepository.count();
+    }
+
+    public Integer[] getPageList(Integer curPageNum) {
+        Integer[] pageList = new Integer[BLOCK_PAGE_NUM_COUNT];
+
+// 총 게시글 갯수
+        Double postsTotalCount = Double.valueOf(this.getBoardCount());
+
+// 총 게시글 기준으로 계산한 마지막 페이지 번호 계산 (올림으로 계산)
+        Integer totalLastPageNum = (int)(Math.ceil((postsTotalCount/PAGE_POST_COUNT)));
+
+// 현재 페이지를 기준으로 블럭의 마지막 페이지 번호 계산
+        Integer blockLastPageNum = (totalLastPageNum > curPageNum + BLOCK_PAGE_NUM_COUNT)
+                ? curPageNum + BLOCK_PAGE_NUM_COUNT
+                : totalLastPageNum;
+
+// 페이지 시작 번호 조정
+        curPageNum = (curPageNum <= 3) ? 1 : curPageNum - 2;
+
+// 페이지 번호 할당
+        for (int val = curPageNum, idx = 0; val <= blockLastPageNum; val++, idx++) {
+            pageList[idx] = val;
+        }
+
+        return pageList;
+    }
+
 
 //    @Transactional
 //    public List<BoardDto> getBoardList() {
