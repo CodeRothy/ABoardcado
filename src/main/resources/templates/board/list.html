@@ -33,47 +33,52 @@
             </tr>
             </tbody>
         </table>
+
         <div class="row">
             <div class="col-auto mr-auto"></div>
             <div class="col-auto">
                 <a class="btn btn-success" th:href="@{/post}" role="button">글쓰기</a>
             </div>
         </div>
+
     </div>
 
-    <nav style="text-align: center;">
-        <ul class="pagination"
-            th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
-                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+    <!--표에 사용될 변수값 초기화 -->
+    <ul class="pagination" th:with="start=${T(Math).floor(list.number/10)*10 + 1}, last=(${start + 9 < list.totalPages ? start + 9 : list.totalPages})">
+        <th:block th:with="firstAddr=@{/(page=1)},
+                            prevAddr=@{/(page=${list.number})},
+                            nextAddr=@{/(page=${list.number + 2})},
+                            lastAddr=@{/(page=${list.totalPages})}">
             <li>
-                <a th:href="@{/(page=1)}" aria-label="First">
+                <a th:href="${firstAddr}" aria-label="First">
                     <span aria-hidden="true">First</span>
                 </a>
             </li>
-
-            <li th:class="${boardList.first} ? 'disabled'">
-                <a th:href="${boardList.first} ? '#' :@{/(page=${boardList.number})}" aria-label="Previous">
+            <!-- 이전 페이지로 가기 버튼 -->
+            <li th:class="${list.first} ? 'disabled'">
+                <a th:href="${list.first} ? '#' :${prevAddr}" aria-label="Previous">
                     <span aria-hidden="true">&lt;</span>
                 </a>
             </li>
-
-            <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+            <!--1,2,3,4,.. 등 페이지-->
+            <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == list.number + 1} ? 'active'">
                 <a th:text="${page}" th:href="@{/(page=${page})}"></a>
             </li>
-
-            <li th:class="${boardList.last} ? 'disabled'">
-                <a th:href="${boardList.last} ? '#' : @{/(page=${boardList.number + 2})}" aria-label="Next">
-                    <span aria-hidden="true">&gt;</span>
+            <!--다음 페이지로 -->
+            <li th:class="${list.last} ? 'disabled'">
+                <a th:href="${list.last} ? '#' : ${nextAddr}" aria-label="Next">
+                     <span aria-hidden="true">&gt;</span>
                 </a>
             </li>
-
+            <!--맨 마지막 페이지로 이동 -->
             <li>
-                <a th:href="@{/(page=${boardList.totalPages})}" aria-label="Last">
+                <a th:href="${lastAddr}" aria-label="Last">
                     <span aria-hidden="true">Last</span>
                 </a>
             </li>
-        </ul>
-    </nav>
+        </th:block>
+    </ul>
+</nav>
 
 
 </div>

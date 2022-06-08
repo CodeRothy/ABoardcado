@@ -26,7 +26,7 @@ public class BoardController {
 //        this.boardService = boardService;
 //    } @AllArgsConstructor 로 생성자 생성 대체
 
-    //    @GetMapping("/")
+    //    @GetMapping("/") 원본
 //    public String list(@PageableDefault Pageable pageable, Model model) {
 //        List<BoardDto> boardDtoList = boardService.getBoardList();
 //        model.addAttribute("postList", boardDtoList);
