@@ -42,13 +42,39 @@
         </div>
 
     </div>
-    <div>
-    <span th:each="pageNum : ${pageList}" th:inline="text">
-        <a th:href="@{'/?page=' + ${pageNum}}">[[${pageNum}]]</a>
-    </span>
+
+    <div class="page align-center">
+        <ul class="pagination" >
+            <li class="page-item">
+                <a th:href="@{/}" aria-label="First" class="page-link">
+                    <span aria-hidden="true">First</span>
+                </a>
+            </li>
+            <!-- th:classappend="${curPageNum == pageNum+ 1} ? 'active'" -->
+            <!-- 이전 페이지로 가기 버튼 -->
+
+<!--            <li th:class="${pageNum.first} ? 'disabled'">-->
+<!--                <a th:href="${pageNum.first} ? '#' :@{'/?page=' + ${pageNum}}" aria-label="Previous">-->
+<!--                    <span aria-hidden="true">&lt;</span>-->
+<!--                </a>-->
+<!--            </li>-->
+
+            <span th:each="pageNum : ${pageList}" th:inline="text">
+                <li class="page-item" >
+                    <a th:href="@{'/?page=' + ${pageNum}}" class="page-link"
+                       >[[${pageNum}]]</a>
+                </li>
+                    <!--last 로 가기 -->
+<!--                <li class="page-item">
+                    <a th:href="@{'/?page=' + ${pageNum.totalLastPageNum}" aria-label="First" class="page-link">
+                        <span aria-hidden="true">Last</span>
+                    </a>
+                </li> -->
+            </span>
+        </ul>
     </div>
 
-<!--    <div th:if="${!boardList.isEmpty()}">-->
+                <!--    <div th:if="${!boardList.isEmpty()}">-->
 <!--        <nav th:with="pageNumber = ${boardList.pageable.pageNumber},-->
 <!--                pageSize = ${boardList.pageable.pageSize},-->
 <!--                totalPages = ${boardList.totalPages},-->
