@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,7 @@ public class BoardController {
 //        return "board/list";
 //    }
     @GetMapping("/")
-    public String listPage(@PageableDefault Pageable pageable, Model model) {
+    public String listPage(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
         Page<Board> boardList = boardService.getBoardList(pageable);
         model.addAttribute("boardList", boardList);
 

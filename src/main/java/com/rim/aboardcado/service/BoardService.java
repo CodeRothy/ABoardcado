@@ -29,12 +29,12 @@ public class BoardService {
 
     // 글 리스트
     @Transactional
-    public Page<BoardDto> getBoardList(Pageable pageable) {
-        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1); // page는 index 처럼 0부터 시작
-        pageable = PageRequest.of(page, 10);
+    public Page<Board> getBoardList(Pageable pageable) {
+//        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1); // page는 index 처럼 0부터 시작
+//        pageable = PageRequest.of(page, 10);
 
-        Page<BoardDto> dtoList = BoardRepository.boardList(pageable);
-        return dtoList;
+
+        return boardRepository.findAll(pageable);
     }
 
 //    @Transactional
