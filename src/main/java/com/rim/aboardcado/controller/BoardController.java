@@ -1,10 +1,14 @@
 package com.rim.aboardcado.controller;
 
+import com.rim.aboardcado.domain.entity.Board;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +26,17 @@ public class BoardController {
 //        this.boardService = boardService;
 //    } @AllArgsConstructor 로 생성자 생성 대체
 
+    //    @GetMapping("/")
+//    public String list(@PageableDefault Pageable pageable, Model model) {
+//        List<BoardDto> boardDtoList = boardService.getBoardList();
+//        model.addAttribute("postList", boardDtoList);
+//        return "board/list";
+//    }
     @GetMapping("/")
-    public String list(Model model) {
-        List<BoardDto> boardDtoList = boardService.getBoardList();
-        model.addAttribute("postList", boardDtoList);
+    public String listPage(@PageableDefault Pageable pageable, Model model) {
+        Page<Board> boardList = boardService.getBoardList(pageable);
+        model.addAttribute("boardList", boardList);
+
         return "board/list";
     }
 

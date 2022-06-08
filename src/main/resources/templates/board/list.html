@@ -40,29 +40,43 @@
             </div>
         </div>
     </div>
+
+    <nav style="text-align: center;">
+        <ul class="pagination"
+            th:with="start=${T(Math).floor(boardList.number/10)*10 + 1},
+                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+            <li>
+                <a th:href="@{/(page=1)}" aria-label="First">
+                    <span aria-hidden="true">First</span>
+                </a>
+            </li>
+
+            <li th:class="${boardList.first} ? 'disabled'">
+                <a th:href="${boardList.first} ? '#' :@{/(page=${boardList.number})}" aria-label="Previous">
+                    <span aria-hidden="true">&lt;</span>
+                </a>
+            </li>
+
+            <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+                <a th:text="${page}" th:href="@{/(page=${page})}"></a>
+            </li>
+
+            <li th:class="${boardList.last} ? 'disabled'">
+                <a th:href="${boardList.last} ? '#' : @{/(page=${boardList.number + 2})}" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/(page=${boardList.totalPages})}" aria-label="Last">
+                    <span aria-hidden="true">Last</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+
 </div>
-<div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
-    <ul class="pagination justify-content-center">
 
-        <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
-            <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
-                <span aria-hidden='true'>Previous</span>
-            </a>
-        </li>
-
-        <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
-            <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
-        </li>
-
-        <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
-            <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
-                <span aria-hidden='true'>Next</span>
-            </a>
-        </li>
-
-    </ul>
-</div>
-
-</div>
 
 </html>
