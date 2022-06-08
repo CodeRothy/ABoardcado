@@ -38,7 +38,7 @@ public class BoardController {
         List<BoardDto> boardDtoList = boardService.getBoardList(pageNum);
         Integer[] pageList = boardService.getPageList(pageNum);
 
-        model.addAttribute("boardList", boardDtoList);
+        model.addAttribute("postList", boardDtoList);
         model.addAttribute("pageList", pageList);
 
         return "board/list";
