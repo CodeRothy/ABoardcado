@@ -24,8 +24,8 @@
                     <a href="#" th:href="@{/(page=${items.pageable.pageNumber -1})}" class="page-link">Prev</a>
                 </li>
 
-                <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <a href="#" th:href="@{/(page=${page}-1)}" class="page-link"th:text="${page}">1</a>
+                <li th:class="${page == nowPage} ? 'active page-item'" class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}" >
+                    <a href="#" th:href="@{/(page=${page}-1)}" class="page-link"th:text="${page}" >1</a>
                 </li>
 
                 <li class="page-item" th:classappend="${items.totalPages == items.pageable.pageNumber + 1}? 'disabled'">
