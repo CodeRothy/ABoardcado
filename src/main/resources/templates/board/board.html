@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<div layout:fragment="content">
+    <div class="container">
+        <table class="table">
+            <tr>
+                <th>글 번호</th>
+                <th>글쓴이</th>
+                <th>글 제목</th>
+            </tr>
+            <tr th:each="items: ${items}">
+                <td th:text="${items.id}"></td>
+                <td th:text="${items.author}"></td>
+                <td th:text="${items.title}"></td>
+            </tr>
+        </table>
+
+        <div class="page">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${1 == items.pageable.pageNumber +1}? 'disabled'">
+                    <a href="#" th:href="@{/(page=${items.pageable.pageNumber -1})}" class="page-link">Prev</a>
+                </li>
+
+                <li class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <a href="#" th:href="@{/(page=${page}-1)}" class="page-link"th:text="${page}">1</a>
+                </li>
+
+                <li class="page-item" th:classappend="${items.totalPages == items.pageable.pageNumber + 1}? 'disabled'">
+                    <a href="#" th:href="@{/(page=${items.pageable.pageNumber +1})}" class="page-link">Next</a>
+                </li>
+
+            </ul>
+        </div>
+
+        </body>
+    </div>
+</div>
+</html>

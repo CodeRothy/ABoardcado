@@ -1,12 +1,14 @@
 package com.rim.aboardcado.controller;
 
 import com.rim.aboardcado.domain.entity.Board;
+import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -33,15 +35,33 @@ public class BoardController {
 //        model.addAttribute("postList", boardDtoList);
 //        return "board/list";
 //    }
-    @GetMapping("/")
-    public String list(@RequestParam(value = "page",defaultValue = "1") Integer pageNum, Model model) {
-        List<BoardDto> boardDtoList = boardService.getBoardList(pageNum);
-        Integer[] pageList = boardService.getPageList(pageNum);
+    // paging 3 성공분
+//    @GetMapping("/")
+//    public String list(@RequestParam(value = "page",defaultValue = "1") Integer pageNum, Model model) {
+//        List<BoardDto> boardDtoList = boardService.getBoardList(pageNum);
+//        Integer[] pageList = boardService.getPageList(pageNum);
+//
+//        model.addAttribute("postList", boardDtoList);
+//        model.addAttribute("pageList", pageList);
+//
+//        return "board/list";
+//    }
+    @GetMapping("/boards")
+    public String items(@PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 
-        model.addAttribute("postList", boardDtoList);
-        model.addAttribute("pageList", pageList);
+        Page<Board> items = boardService.getBoardList(pageable);
 
-        return "board/list";
+        int nowPage = items.getPageable().getPageNumber()+1;
+
+        int startPage = Math.max(nowPage-4,1);
+        int endPage = Math.min(nowPage+5, items.getTotalPages());
+
+        model.addAttribute("items", items);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "board/board";
     }
 
     @GetMapping("/post")
