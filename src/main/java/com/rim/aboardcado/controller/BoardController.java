@@ -47,15 +47,15 @@ public class BoardController {
 //        return "board/list";
 //    }
     @GetMapping("/")
-    public String postList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+    public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 
-        Page<Board> postList = boardService.getBoardList(pageable);
+        Page<Board> boardList = boardService.getBoardList(pageable);
 
-        int nowPage = postList.getPageable().getPageNumber()+1;
+        int nowPage = boardList.getPageable().getPageNumber()+1;
         int startPage = Math.max(nowPage-4,1);
-        int endPage = Math.min(nowPage+5, postList.getTotalPages());
+        int endPage = Math.min(nowPage+5, boardList.getTotalPages());
 
-        model.addAttribute("postList", postList);
+        model.addAttribute("boardList", boardList);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);

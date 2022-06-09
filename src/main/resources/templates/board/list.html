@@ -28,7 +28,7 @@
                     <span th:text="${post.author}"></span>
                 </td>
                 <td>
-                    <span th:text="${#temporals.format(post.createdDate, 'HH:mm MM-dd-yyyy')}"></span>
+                    <span th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm ')}"></span>
                 </td>
             </tr>
             </tbody>
@@ -44,17 +44,17 @@
     </div>
 
     <div class="page">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${1 == postList.pageable.pageNumber +1}? 'disabled'">
-                <a href="#" th:href="@{/(page=${postList.pageable.pageNumber -1})}" class="page-link">Prev</a>
+        <ul class="pagination justify-content-center pagination-green" >
+            <li class="page-item" th:classappend="${1 == boardList.pageable.pageNumber +1}? 'disabled'">
+                <a href="#" th:href="@{/(page=${boardList.pageable.pageNumber -1})}" class="page-link">Prev</a>
             </li>
 
             <li th:classappend=="${page==nowPage}?'active'" class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}" >
                 <a href="#" th:href="@{/(page=${page}-1)}" class="page-link"th:text="${page}" >1</a>
             </li>
 
-            <li class="page-item" th:classappend="${postList.totalPages == postList.pageable.pageNumber + 1}? 'disabled'">
-                <a href="#" th:href="@{/(page=${postList.pageable.pageNumber +1})}" class="page-link">Next</a>
+            <li class="page-item" th:classappend="${boardList.totalPages == boardList.pageable.pageNumber + 1}? 'disabled'">
+                <a href="#" th:href="@{/(page=${boardList.pageable.pageNumber +1})}" class="page-link">Next</a>
             </li>
 
         </ul>
