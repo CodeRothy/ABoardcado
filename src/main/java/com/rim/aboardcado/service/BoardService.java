@@ -4,13 +4,11 @@ import com.rim.aboardcado.domain.entity.Board;
 import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,38 +28,14 @@ public class BoardService {
 
     // 글 리스트 및 페이징
     @Transactional
-    public Page<Board> getBoardList(Pageable pageable) {
-        Page<Board> boardList = boardRepository.findAll(pageable);
+    public List<BoardDto> getBoardList(Pageable pageable) {
+        Page<Board> boards = boardRepository.findAll(pageable);
+        List<BoardDto> boardList = new ArrayList<>();
 
+        for (Board board : boards) {
+            boardList.add(this.toEntity(board));
+        }
         return boardList;
-    }
-
-//    // 글 리스트 paging 3 성공분
-//    @Transactional
-//    public List<BoardDto> getBoardList(Integer pageNum) {
-//        Page<Board> page = boardRepository
-//                .findAll(PageRequest
-//                        .of(pageNum-1, PAGE_POST_COUNT, Sort.by(Sort.Direction.DESC, "id")));
-//
-//        List<Board> boardList = page.getContent();
-//        List<BoardDto> boardDtoList = new ArrayList<>();
-//
-//        for (Board board : boardList) {
-//            boardDtoList.add(this.toEntity(board));
-//        }
-//        return boardDtoList;
-//    }
-//
-    // boardDto 엔티티빌드 메소드
-    @Transactional
-    private BoardDto toEntity(Board board) {
-        return BoardDto.builder()
-                    .id(board.getId())
-                    .author(board.getAuthor())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .createdDate(board.getCreatedDate())
-                    .build();
     }
 
 
@@ -78,6 +52,18 @@ public class BoardService {
     @Transactional
     public void deletePost(Long id) {
         boardRepository.deleteById(id);
+    }
+
+    // boardDto 빌더패턴
+    @Transactional
+    private BoardDto toEntity(Board board) {
+        return BoardDto.builder()
+                .id(board.getId())
+                .author(board.getAuthor())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .createdDate(board.getCreatedDate())
+                .build();
     }
 
 }

@@ -24,41 +24,25 @@ import java.util.List;
 public class BoardController {
 
     private BoardService boardService;
+    private BoardRepository boardRepository;
 
-//    public BoardController(BoardService boardService) {
-//        this.boardService = boardService;
-//    } @AllArgsConstructor 로 생성자 생성 대체
 
-    //    @GetMapping("/") 원본
-//    public String list(@PageableDefault Pageable pageable, Model model) {
-//        List<BoardDto> boardDtoList = boardService.getBoardList();
-//        model.addAttribute("postList", boardDtoList);
-//        return "board/list";
-//    }
-    // paging 3 성공분
-//    @GetMapping("/")
-//    public String list(@RequestParam(value = "page",defaultValue = "1") Integer pageNum, Model model) {
-//        List<BoardDto> boardDtoList = boardService.getBoardList(pageNum);
-//        Integer[] pageList = boardService.getPageList(pageNum);
-//
-//        model.addAttribute("postList", boardDtoList);
-//        model.addAttribute("pageList", pageList);
-//
-//        return "board/list";
-//    }
     @GetMapping("/")
     public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 
-        Page<Board> boardList = boardService.getBoardList(pageable);
+        Page<Board> page = boardRepository.findAll(pageable);
+        List<BoardDto> boardList = boardService.getBoardList(pageable);
 
-        int nowPage = boardList.getPageable().getPageNumber()+1;
+        int nowPage = page.getPageable().getPageNumber()+1;
         int startPage = Math.max(nowPage-4,1);
-        int endPage = Math.min(nowPage+5, boardList.getTotalPages());
+        int endPage = Math.min(nowPage+5, page.getTotalPages());
+        int totalPages = page.getTotalPages();
 
         model.addAttribute("boardList", boardList);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
 
         return "board/list";
     }
