@@ -38,6 +38,19 @@ public class BoardService {
         return boardList;
     }
 
+    // 글 검색
+    @Transactional
+    public List<BoardDto> searchPosts(String keyword, Pageable pageable) {
+        List<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
+        List<BoardDto> boardList = new ArrayList<>();
+
+        if (boards.isEmpty()) return boardList;
+
+        for (Board board : boards) {
+            boardList.add(this.toEntity(board));
+        }
+        return boardList;
+    }
 
     // 글 상세보기
     @Transactional

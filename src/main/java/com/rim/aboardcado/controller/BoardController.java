@@ -27,6 +27,7 @@ public class BoardController {
     private BoardRepository boardRepository;
 
 
+    // 리스트
     @GetMapping("/")
     public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 
@@ -47,11 +48,25 @@ public class BoardController {
         return "board/list";
     }
 
+    // 글 검색
+    @GetMapping("/search")
+    public String search(@RequestParam(value = "keyword") String keyword,
+                         @RequestParam() Pageable pageable, Model model) {
+
+        List<BoardDto> boardList = boardService.searchPosts(keyword, pageable);
+        model.addAttribute("boardList", boardList );
+
+        return "board/list";
+    }
+
+
+    // 글쓰기
     @GetMapping("/post")
     public String post() {
 
         return "board/post";
     }
+
 
     @PostMapping("/post")
     public String write(BoardDto boardDto) {
@@ -59,6 +74,8 @@ public class BoardController {
         return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
+
+    // 글 상세보기
     @GetMapping("/post/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
         BoardDto boardDto = boardService.postDtl(id);
@@ -66,6 +83,8 @@ public class BoardController {
         return "board/detail";
     }
 
+
+    // 글 수정
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model){
         BoardDto boardDto = boardService.postDtl(id);
@@ -79,9 +98,12 @@ public class BoardController {
         return "redirect:/post/{id}";
     }
 
+
+    // 글 삭제
     @DeleteMapping("/post/{id}")
     public String delete(@PathVariable("id") Long id) {
         boardService.deletePost(id);
         return "redirect:/";
     }
+
 }
