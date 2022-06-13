@@ -34,6 +34,8 @@
             </tr>
             </tbody>
         </table>
+        <span th:text="${keyword}"></span>
+
 
         <div class="row">
             <div class="col-auto mr-auto"></div>
@@ -45,15 +47,16 @@
             <ul class="pagination justify-content-center pagination-green" >
                 <!-- 이전 페이지 -->
                 <li class="page-item" th:classappend="${1 == nowPage }? 'disabled'">
-                    <a href="#" th:href="@{/(page=${nowPage -2})}" class="page-link">Prev</a>
+                    <a href="#" th:href="@{/search?(keyword=${keyword}, page=${nowPage -2})}" class="page-link">Prev</a>
                 </li>
                 <!-- 현재 페이지 및 블럭 -->
                 <li th:classappend=="${page==nowPage}?'active'" class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}" >
-                    <a href="#" th:href="@{/(page=${page-1})}" class="page-link"th:text="${page}" >1</a>
+                    <a href="#" th:href="@{/search?(keyword=${keyword}, page=${page-1})}" class="page-link"th:text="${page}" >1</a>
                 </li>
                 <!-- 다음 페이지 -->
                 <li class="page-item" th:classappend="${totalPages == nowPage }? 'disabled'">
-                    <a href="#" th:href="@{/(page=${nowPage})}" class="page-link">Next</a>
+
+                    <a href="#" th:href="@{/search?(keyword=${keyword}, page=${nowPage})}" class="page-link">Next</a>-
                 </li>
 
             </ul>
