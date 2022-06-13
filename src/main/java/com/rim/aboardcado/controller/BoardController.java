@@ -29,7 +29,7 @@ public class BoardController {
 
     // 리스트
     @GetMapping("/")
-    public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+    public String boardList(@PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
 
         Page<Board> page = boardRepository.findAll(pageable);
         List<BoardDto> boardList = boardService.getBoardList(pageable);
@@ -51,10 +51,26 @@ public class BoardController {
     // 글 검색
     @GetMapping("/search")
     public String search(@RequestParam(value = "keyword") String keyword,
-                         @RequestParam() Pageable pageable, Model model) {
+                         @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model) {
+
+        Page<Board> page = boardRepository.findByTitleContaining(keyword,pageable);
 
         List<BoardDto> boardList = boardService.searchPosts(keyword, pageable);
-        model.addAttribute("boardList", boardList );
+
+
+        //Page<Board> page = boardRepository.findAll(pageable);
+        //List<BoardDto> boardList = boardService.getBoardList(pageable);
+
+        int nowPage = page.getPageable().getPageNumber()+1;
+        int startPage = Math.max(nowPage-4,1);
+        int endPage = Math.min(nowPage+5, page.getTotalPages());
+        int totalPages = page.getTotalPages();
+
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
 
         return "board/list";
     }
