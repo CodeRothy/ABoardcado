@@ -55,8 +55,8 @@ public class BoardController {
                          @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC)
                                  Pageable pageable, Model model) {
 
-        Page<Board> page = boardRepository.findByTitleContaining(keyword,pageable);
-        List<BoardDto> boardList = boardService.searchPosts(keyword, pageable);
+        Page<Board> page = boardRepository.findByTitleContainingOrContentContaining(keyword,keyword,pageable);
+        List<BoardDto> boardList = boardService.searchPosts(keyword,keyword, pageable);
 
 
         //Page<Board> page = boardRepository.findAll(pageable);

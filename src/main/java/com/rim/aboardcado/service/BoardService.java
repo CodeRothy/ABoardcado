@@ -40,8 +40,8 @@ public class BoardService {
 
     // 글 검색
     @Transactional
-    public List<BoardDto> searchPosts(String keyword, Pageable pageable) {
-        Page<Board> boards = boardRepository.findByTitleContaining(keyword, pageable);
+    public List<BoardDto> searchPosts(String title, String content, Pageable pageable) {
+        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
         List<BoardDto> boardList = new ArrayList<>();
 
         if (boards.isEmpty()) return boardList;
