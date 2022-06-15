@@ -29,7 +29,7 @@ public class BoardController {
 
     // 리스트
     @GetMapping("/")
-    public String boardList(@PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC)
+    public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC)
                                         Pageable pageable, Model model) {
 
         Page<Board> page = boardRepository.findAll(pageable);
@@ -52,7 +52,7 @@ public class BoardController {
     // 글 검색
     @GetMapping("/search")
     public String search(@RequestParam(value = "keyword") String keyword,
-                         @PageableDefault(page = 0, size = 2, sort = "id", direction = Sort.Direction.DESC)
+                         @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC)
                                  Pageable pageable, Model model) {
 
         Page<Board> page = boardRepository.findByTitleContainingOrContentContaining(keyword,keyword,pageable);
