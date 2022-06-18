@@ -33,7 +33,7 @@ public class BoardService {
         List<BoardDto> boardList = new ArrayList<>();
 
         for (Board board : boards) {
-            boardList.add(this.responseDto(board));
+            boardList.add(this.toDto(board));
         }
         return boardList;
     }
@@ -47,7 +47,7 @@ public class BoardService {
         if (boards.isEmpty()) return boardList;
 
         for (Board board : boards) {
-            boardList.add(this.responseDto(board));
+            boardList.add(this.toDto(board));
         }
         return boardList;
     }
@@ -57,7 +57,7 @@ public class BoardService {
     public BoardDto postDtl(Long id) {
         Board board = boardRepository.findById(id).get();
 
-        BoardDto boardDto = this.responseDto(board);
+        BoardDto boardDto = this.toDto(board);
         return boardDto;
     }
 
@@ -67,20 +67,10 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
-//    // boardDto 빌더패턴
-//    @Transactional
-//    private BoardDto toEntity(Board board) {
-//        return BoardDto.builder()
-//                .id(board.getId())
-//                .author(board.getAuthor())
-//                .title(board.getTitle())
-//                .content(board.getContent())
-//                .createdDate(board.getCreatedDate())
-//                .build();
-//    }
-    // boardDto 빌더패턴
+
+    // Board -> boardDto 빌더패턴
     @Transactional
-    private BoardDto responseDto(Board board) {
+    private BoardDto toDto(Board board) {
         return BoardDto.builder()
                 .id(board.getId())
                 .author(board.getAuthor())

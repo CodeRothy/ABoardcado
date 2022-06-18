@@ -23,12 +23,12 @@ public class MemberService {
 
 
     public Member saveMember(MemberDto memberDto) {
-        MemberChk(memberDto);
+        memberCheck(memberDto);
 
         return memberRepository.save(toEntity(memberDto));
     }
 
-    private void MemberChk(MemberDto memberDto) {
+    private void memberCheck(MemberDto memberDto) {
         Member findMember = memberRepository.findByEmail(memberDto.getEmail());
         if (findMember != null) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
