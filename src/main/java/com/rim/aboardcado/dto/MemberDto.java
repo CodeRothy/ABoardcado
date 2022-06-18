@@ -17,13 +17,23 @@ public class MemberDto {
     private String email;
     private String password;
 
-    public Member toEntityEncode() {
-        Member build = Member.builder()
+    public Member toEntityEncode(MemberDto memberDto) {
+        return Member.builder()
                 .name(name)
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .role(Role.USER)
                 .build();
-        return build;
+
     }
+    //    @Transactional
+//    private Member toEntity(MemberDto memberDto) {
+//        return Member.builder()
+//                .name(memberDto.getName())
+//                .password(passwordEncoder.encode(memberDto.getPassword()))
+//                .email(memberDto.getEmail())
+//                .role(Role.USER)
+//                .build();
+//    }
+
 }
