@@ -1,9 +1,7 @@
 package com.rim.aboardcado.service;
 
-import com.rim.aboardcado.domain.entity.Board;
 import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.MemberRepository;
-import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.dto.MemberDto;
 import com.rim.aboardcado.dto.Role;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-//@Transactional
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
