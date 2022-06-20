@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
-
+<!--<head>-->
+<!--    <meta name="csrf-token" content="{{ csrf_token() }}">-->
+<!--</head>-->
 <!-- valid 체크 CSS 추가 -->
 <th:block layout:fragment="css">
     <style>
@@ -55,6 +57,7 @@
                     <input class="btn btn-success" type="submit" role="button" value="join" />
                     <input type="hidden" th:name="${_csrf.parameterName}"
                                             th:value="${_csrf.token}">
+<!--                    <s:csrfInput />-->
                     <a class="btn btn-danger" th:href="@{'/'}" role="button">취소</a>
                 </div>
             </div>

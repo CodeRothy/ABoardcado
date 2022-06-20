@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
 
 
 @Configuration
@@ -16,7 +18,7 @@ public class SecurityConfig  {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests() // 요청에 대한 보안인증 체크 선언
-                .antMatchers("/css/**", "/js/**", "/image/**","/post").permitAll()
+                .antMatchers("/resources/**","/error","/post").permitAll()
                 .antMatchers("/**","/join").permitAll()
                 //.antMatchers("/post").hasRole("USER")
                 .anyRequest().authenticated() // 모든 요청에 체크 (권한 상관X)
