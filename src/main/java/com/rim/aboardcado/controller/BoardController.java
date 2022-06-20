@@ -95,14 +95,13 @@ public class BoardController {
             return "board/post";
         }
         try {
-            //Board board = Board.builder().build();
             boardService.savePost(boardDto);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "board/post";
         }
-        //boardService.savePost(boardDto);
+
         return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 

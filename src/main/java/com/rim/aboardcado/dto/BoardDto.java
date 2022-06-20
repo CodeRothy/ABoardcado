@@ -1,6 +1,5 @@
 package com.rim.aboardcado.dto;
 
-import com.rim.aboardcado.domain.entity.Board;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
