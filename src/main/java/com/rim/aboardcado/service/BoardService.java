@@ -29,27 +29,27 @@ public class BoardService {
     // 글 리스트 및 페이징
     @Transactional
     public List<BoardDto> getBoardList(Pageable pageable) {
-        Page<Board> boards = boardRepository.findAll(pageable);
-        List<BoardDto> boardList = new ArrayList<>();
+        Page<Board> boardList = boardRepository.findAll(pageable);
+        List<BoardDto> boardDtoList = new ArrayList<>();
 
-        for (Board board : boards) {
-            boardList.add(this.toDto(board));
+        for (Board board : boardList) {
+            boardDtoList.add(this.toDto(board));
         }
-        return boardList;
+        return boardDtoList;
     }
 
     // 글 검색
     @Transactional
     public List<BoardDto> searchPosts(String title, String content, Pageable pageable) {
-        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
-        List<BoardDto> boardList = new ArrayList<>();
+        Page<Board> boardList = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
+        List<BoardDto> boardDtoList = new ArrayList<>();
 
-        if (boards.isEmpty()) return boardList;
+        if (boardDtoList.isEmpty()) return boardDtoList;
 
-        for (Board board : boards) {
-            boardList.add(this.toDto(board));
+        for (Board board : boardList) {
+            boardDtoList.add(this.toDto(board));
         }
-        return boardList;
+        return boardDtoList;
     }
 
     // 글 상세보기

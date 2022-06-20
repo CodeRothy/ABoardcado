@@ -34,15 +34,15 @@ public class BoardController {
     public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC)
                                         Pageable pageable, Model model) {
 
-        Page<Board> page = boardRepository.findAll(pageable);
-        List<BoardDto> boardList = boardService.getBoardList(pageable);
+        Page<Board> boardList = boardRepository.findAll(pageable);
+        List<BoardDto> boardDtoList = boardService.getBoardList(pageable);
 
-        int nowPage = page.getPageable().getPageNumber()+1;
+        int nowPage = boardList.getPageable().getPageNumber()+1;
         int startPage = Math.max(nowPage-4,1);
-        int endPage = Math.min(nowPage+5, page.getTotalPages());
-        int totalPages = page.getTotalPages();
+        int endPage = Math.min(nowPage+5, boardList.getTotalPages());
+        int totalPages = boardList.getTotalPages();
 
-        model.addAttribute("boardList", boardList);
+        model.addAttribute("postList", boardDtoList);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
@@ -57,20 +57,16 @@ public class BoardController {
                          @PageableDefault(page = 0 , size = 5, sort = "id", direction = Sort.Direction.DESC)
                                  Pageable pageable, Model model) {
 
-        Page<Board> page = boardRepository.findByTitleContainingOrContentContaining(keyword,keyword,pageable);
-        List<BoardDto> boardList = boardService.searchPosts(keyword,keyword, pageable);
+        Page<Board> boardList = boardRepository.findByTitleContainingOrContentContaining(keyword,keyword,pageable);
+        List<BoardDto> boardDtoList = boardService.searchPosts(keyword,keyword, pageable);
 
-
-        //Page<Board> page = boardRepository.findAll(pageable);
-        //List<BoardDto> boardList = boardService.getBoardList(pageable);
-
-        int nowPage = page.getPageable().getPageNumber()+1;
+        int nowPage = boardList.getPageable().getPageNumber()+1;
         int startPage = Math.max(nowPage-4,1);
-        int endPage = Math.min(nowPage+5, page.getTotalPages());
-        int totalPages = page.getTotalPages();
+        int endPage = Math.min(nowPage+5, boardList.getTotalPages());
+        int totalPages = boardList.getTotalPages();
 
         model.addAttribute("keyword", keyword);
-        model.addAttribute("boardList", boardList);
+        model.addAttribute("postList", boardDtoList);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);

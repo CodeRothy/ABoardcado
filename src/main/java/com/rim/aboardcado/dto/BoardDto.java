@@ -18,7 +18,7 @@ public class BoardDto {
     private String author;
 
     @NotEmpty(message = "제목 입력은 필수입니다.")
-    @Length(max = 50, message = "50자 이하만 가능합니다.")
+    @Length(max = 20, message = "50자 이하만 가능합니다.")
     private String title;
 
     @NotEmpty(message = "내용 입력은 필수입니다.")
