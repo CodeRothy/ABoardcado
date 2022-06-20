@@ -23,7 +23,7 @@ public class BoardService {
     @Transactional
     public Long savePost(BoardDto boardDto) {
 
-        return boardRepository.save(boardDto.toEntity()).getId();
+        return boardRepository.save(toEntity(boardDto)).getId();
     }
 
     // 글 리스트 및 페이징
@@ -67,16 +67,27 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
+    // BoardDto -> Board
+    public Board toEntity(BoardDto boardDto) {
+        Board build = Board.builder()
+                .id(boardDto.getId())
+                .author(boardDto.getAuthor())
+                .title(boardDto.getTitle())
+                .content(boardDto.getContent())
+                .build();
+        return build;
+    }
 
     // Board -> boardDto 빌더패턴
     @Transactional
-    private BoardDto toDto(Board board) {
+    public BoardDto toDto(Board board) {
         return BoardDto.builder()
                 .id(board.getId())
                 .author(board.getAuthor())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdDate(board.getCreatedDate())
+                .modifiedDate(board.getModifiedDate())
                 .build();
     }
 

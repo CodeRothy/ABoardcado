@@ -14,8 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 //@RequestMapping("/board")
@@ -80,15 +82,27 @@ public class BoardController {
 
     // 글쓰기
     @GetMapping("/post")
-    public String post() {
+    public String post(BoardDto boardDto, Model model) {
+        model.addAttribute("boardDto", boardDto);
 
         return "board/post";
     }
 
 
     @PostMapping("/post")
-    public String write(BoardDto boardDto) {
-        boardService.savePost(boardDto);
+    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "board/post";
+        }
+        try {
+            //Board board = Board.builder().build();
+            boardService.savePost(boardDto);
+
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "board/post";
+        }
+        //boardService.savePost(boardDto);
         return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
