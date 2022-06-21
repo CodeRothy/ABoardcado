@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:fragment="header">
     <nav class="navbar navbar-expand-sm bg-success navbar-dark">
@@ -20,10 +20,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/">리스트</a>
                 </li>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link"><span sec:authentication="name"></span>님 환영합니다!</a>
+                </li>
+<!--                <li class="nav-item" sec:authorize="isAuthenticated()">-->
+<!--                    <p class="nav-link" >님 환영합니다!</p>-->
+<!--                </li>-->
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" href="/login">로그인</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/logout">로그아웃</a>
+                </li>
             </ul>
 
             <!-- 검색 form -->
-            <form class="dorm-inline my-2 my-lg-0" action="/search" method="GET">
+            <form class="form-inline my-2 my-lg-0" action="/search" method="GET">
                 <div class="input-group">
                     <input name="keyword" class="form-control mr-sm-2" type="text" placeholder="검색어를 입력해주세요">
                     <span class="input-group-btn" >
