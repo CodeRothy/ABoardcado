@@ -28,33 +28,28 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig  {
 
-
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/")
-                .usernameParameter("email")
-                .failureUrl("/login/error")
-                .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/");
-
-        return http.build();
-    }
-    @Bean
-    protected SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests() // 요청에 대한 보안인증 체크 선언
-            .antMatchers("/static/**","/error").permitAll()
-            .antMatchers("/join","/").permitAll()
-            .antMatchers("/post").hasRole("USER")
-            .anyRequest().authenticated() // 모든 요청에 체크 (권한 상관X)
-        .and()
-            .exceptionHandling()
-            .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                    .authorizeRequests() // 요청에 대한 보안인증 체크 선언
+                    .antMatchers("/static/**","/error").permitAll()
+                    .antMatchers("/join","/","/login").permitAll()
+                    .antMatchers("/post").hasRole("USER")
+                    .anyRequest().authenticated() // 모든 요청에 체크 (권한 상관X)
+            .and()
+                    .formLogin()
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/")
+                    .usernameParameter("email")
+                    .failureUrl("/login/error")
+            .and()
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/")
+            .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         ;
         return http.build();
     }
