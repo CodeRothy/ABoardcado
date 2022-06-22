@@ -31,17 +31,7 @@ public class MemberService implements UserDetailsService {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
 
-        return memberRepository.save(toEntity(memberDto));
-    }
-
-    // MemberDto -> Member
-    private Member toEntity(MemberDto memberDto) {
-        return Member.builder()
-                .name(memberDto.getName())
-                .password(passwordEncoder.encode(memberDto.getPassword()))
-                .email(memberDto.getEmail())
-                .role(Role.USER)
-                .build();
+        return memberRepository.save(memberDto.toEntity(memberDto));
     }
 
     // 로그인

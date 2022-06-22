@@ -1,5 +1,6 @@
 package com.rim.aboardcado.dto;
 
+import com.rim.aboardcado.domain.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,5 +34,15 @@ public class MemberDto {
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
+    // MemberDto -> Member
+    public Member toEntity(MemberDto memberDto) {
+        return Member.builder()
+                .name(name)
+                .password(passwordEncoder.encode(password))
+                .email(email)
+                .role(Role.USER)
+                .build();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.rim.aboardcado.dto;
 
+import com.rim.aboardcado.domain.entity.Board;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -26,5 +27,16 @@ public class BoardDto {
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
+    // BoardDto -> Board
+    public Board toEntity(BoardDto boardDto) {
+        Board build = Board.builder()
+                .id(boardDto.getId())
+                .author(boardDto.getAuthor())
+                .title(boardDto.getTitle())
+                .content(boardDto.getContent())
+                .build();
+        return build;
+    }
 
 }
