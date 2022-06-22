@@ -5,10 +5,7 @@ import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.service.BoardService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -29,44 +26,43 @@ public class BoardController {
     private BoardRepository boardRepository;
 
 
-    // 리스트
+    // 리스트 페이징
     @GetMapping("/")
-    public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC)
-                                        Pageable pageable, Model model) {
+    public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
+        Page<Board> boards = boardRepository.findAll(pageable);
+        List<BoardDto> boardList = boardService.getBoardList(pageable);
 
-        Page<Board> boardList = boardRepository.findAll(pageable);
-        List<BoardDto> boardDtoList = boardService.getBoardList(pageable);
-
-        int nowPage = boardList.getPageable().getPageNumber()+1;
+        int nowPage = boards.getPageable().getPageNumber()+1;
         int startPage = Math.max(nowPage-4,1);
-        int endPage = Math.min(nowPage+5, boardList.getTotalPages());
-        int totalPages = boardList.getTotalPages();
+        int endPage =   Math.min(nowPage+5, boards.getTotalPages());
+        int totalPages = boards.getTotalPages();
 
-        model.addAttribute("postList", boardDtoList);
+        model.addAttribute("boardList", boardList);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("totalPages", totalPages);
 
         return "board/list";
+
+
     }
 
-    // 글 검색
+    // 검색 페이징
     @GetMapping("/search")
     public String search(@RequestParam(value = "keyword") String keyword,
-                         @PageableDefault(page = 0 , size = 5, sort = "id", direction = Sort.Direction.DESC)
+                         @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC)
                                  Pageable pageable, Model model) {
+        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+        List<BoardDto> boardList = boardService.searchPosts(keyword, keyword, pageable);
 
-        Page<Board> boardList = boardRepository.findByTitleContainingOrContentContaining(keyword,keyword,pageable);
-        List<BoardDto> boardDtoList = boardService.searchPosts(keyword,keyword, pageable);
+        int nowPage = boards.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, boards.getTotalPages());
+        int totalPages = boards.getTotalPages();
 
-        int nowPage = boardList.getPageable().getPageNumber()+1;
-        int startPage = Math.max(nowPage-4,1);
-        int endPage = Math.min(nowPage+5, boardList.getTotalPages());
-        int totalPages = boardList.getTotalPages();
-
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("postList", boardDtoList);
+        model.addAttribute("Keyword", keyword);
+        model.addAttribute("boardList", boardList);
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
@@ -74,16 +70,14 @@ public class BoardController {
 
         return "board/list";
     }
-
 
     // 글쓰기
     @GetMapping("/post")
     public String post(BoardDto boardDto, Model model) {
-        model.addAttribute("boardDto", boardDto);
+        model.addAttribute("board", boardDto);
 
         return "board/post";
     }
-
 
     @PostMapping("/post")
     public String write(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
@@ -102,27 +96,37 @@ public class BoardController {
     }
 
 
-    // 글 상세보기
-    @GetMapping("/post/{id}")
-    public String detail(@PathVariable("id") Long id, Model model) {
-        BoardDto boardDto = boardService.postDtl(id);
-        model.addAttribute("post", boardDto);
-        return "board/detail";
-    }
-
-
     // 글 수정
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model){
         BoardDto boardDto = boardService.postDtl(id);
-        model.addAttribute("post", boardDto);
+        model.addAttribute("board", boardDto);
         return "board/edit";
     }
 
     @PutMapping("/post/edit/{id}")
-    public String update(BoardDto boardDto) {
-        boardService.savePost(boardDto);
-        return "redirect:/post/{id}";
+    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "board/edit";
+        }
+        try {
+            boardService.savePost(boardDto);
+
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "board/edit";
+        }
+
+        return "redirect:/";
+    }
+
+
+    // 글 상세보기
+    @GetMapping("/post/{id}")
+    public String detail(@PathVariable("id") Long id, Model model) {
+        BoardDto boardDto = boardService.postDtl(id);
+        model.addAttribute("board", boardDto);
+        return "board/detail";
     }
 
 

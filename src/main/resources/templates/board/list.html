@@ -5,7 +5,6 @@
 
 <div layout:fragment="content">
     <div class="container">
-
         <table class="table">
             <thead class="thead-light">
             <tr class="text-center">
@@ -16,53 +15,49 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="text-center" th:each="post : ${postList}">
+            <tr class="text-center" th:each="board:${boardList}">
                 <th scope="row">
-                    <span th:text="${post.id}"></span>
+                    <span th:text="${board.id}"></span>
                 </th>
                 <td>
-                    <a th:href="@{'/post/' + ${post.id}}">
-                        <span th:text="${post.title}"></span>
+                    <a th:href="@{'/post/' + ${board.id}}">
+                        <span th:text="${board.title}"></span>
                     </a>
                 </td>
                 <td>
-                    <span th:text="${post.author}"></span>
+                    <span th:text="${board.author}"></span>
                 </td>
                 <td>
-                    <span th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd HH:mm ')}"></span>
+                    <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
                 </td>
             </tr>
             </tbody>
         </table>
-
-        <div class="row">
-            <div class="col-auto mr-auto"></div>
-            <div class="col-auto">
-                <a class="btn btn-success" th:href="@{/post}" role="button">글쓰기</a>
-            </div>
-        </div>
         <div class="page">
             <ul class="pagination justify-content-center pagination-green" >
-                <!-- 이전 페이지 -->
-                <li class="page-item" th:classappend="${1 == nowPage }? 'disabled'">
-                    <a href="#" th:href="@{/search?(keyword=${keyword}, page=${nowPage -2})}" class="page-link">Prev</a>
-                </li>
-                <!-- 현재 페이지 및 블럭 -->
-                <li th:classappend=="${page==nowPage}?'active'" class="page-item" th:each="page : ${#numbers.sequence(startPage, endPage)}" >
-                    <a href="#" th:href="@{/search?(keyword=${keyword}, page=${page-1})}" class="page-link"th:text="${page}" >1</a>
-                </li>
-                <!-- 다음 페이지 -->
-                <li class="page-item" th:classappend="${totalPages == nowPage }? 'disabled'">
 
-                    <a href="#" th:href="@{/search?(keyword=${keyword}, page=${nowPage})}" class="page-link">Next</a>-
+                <!-- 이전 페이지 버튼 -->
+                <li class="page-item" th:classappend="${1 == nowPage }? 'disabled'">
+                    <a th:href="@{/(page=${nowPage -2})}" class="page-link">Prev</a>
+                </li>
+
+                <!-- 현재 페이지 및 블럭 -->
+                <li class="page-item" th:classappend="${page == nowPage }? 'active'" th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                    <a th:href="@{/(page=${page-1})}" class="page-link" th:text="${page}" >1</a>
+                </li>
+
+                <!-- 다음 페이지 버튼-->
+                <li class="page-item" th:classappend="${totalPages == nowPage }? 'disabled'">
+                    <a th:href="@{/(page=${nowPage})}" class="page-link">Next</a>
                 </li>
 
             </ul>
         </div>
+        <div class="row">
+            <div class="col-auto mr-auto"></div>
+            <div class="col-auto">
+                <a class="btn btn-primary" th:href="@{/post}" role="button">글쓰기</a>
+            </div>
+        </div>
     </div>
-
-
 </div>
-
-
-</html>

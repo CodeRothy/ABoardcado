@@ -3,34 +3,58 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+    <style>
+        .fieldError {
+            color: #b73a3a;
+        }
+    </style>
+</th:block>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        $(document).ready(function(){
+            var errorMessage = [        [${errorMessage}]      ];
+            if(errorMessage != null){
+                alert(errorMessage);
+            }
+        });
+    </script>
+</th:block>
+
 <div layout:fragment="content">
     <div class="container">
-        <form th:action="@{'/post/edit/' + ${post.id}}" method="post">
+        <form th:object="${board}" th:action="@{'/post/edit/' + ${id}}" method="post" >
             <input type="hidden" name="_method" value="put"/>
-            <input type="hidden" name="id" th:value="${post.id}"/>
+            <input type="hidden" name="id" th:value="${id}"/>
             <div class="form-group row">
                 <label for="inputTitle" class="col-sm-2 col-form-label"><strong>제목</strong></label>
                 <div class="col-sm-10">
-                    <input type="text" name="title" class="form-control" id="inputTitle" th:value="${post.title}">
+                    <input type="text" name="title" class="form-control" id="inputTitle" th:value="${board.title}">
+                    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="fieldError">Incorrect data</p>
+
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputAuthor" class="col-sm-2 col-form-label"><strong>작성자</strong></label>
                 <div class="col-sm-10">
-                    <input type="text" name="author" class="form-control" id="inputAuthor" th:value="${post.author}" readonly>
+                    <input type="text" name="author" class="form-control" id="inputAuthor" th:value="${board.author}" readonly>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="inputContent" class="col-sm-2 col-form-label"><strong>내용</strong></label>
                 <div class="col-sm-10">
-                    <textarea type="text" name="content" class="form-control" id="inputContent"th:text="${post.content}"></textarea>
+                    <textarea type="text" name="content" class="form-control" id="inputContent"th:text="${board.content}"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="col-auto mr-auto"></div>
                 <div class="col-auto">
                     <input class="btn btn-success" type="submit" role="button" value="수정">
-                    <a class="btn btn-danger" th:href="@{'/post/' + ${post.id}}" role="button">취소</a>
+                    <a class="btn btn-danger" th:href="@{'/post/' + ${id}}" role="button">취소</a>
                 </div>
             </div>
         </form>

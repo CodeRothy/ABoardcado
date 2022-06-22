@@ -23,7 +23,7 @@ public class SecurityConfig  {
         http
                     .authorizeRequests() // 요청에 대한 보안인증 체크 선언
                     .antMatchers("/static/**","/error").permitAll()
-                    .antMatchers("/join","/","/login").permitAll()
+                    .antMatchers("/","/join","/login","/search/**").permitAll()
                     .antMatchers("/post").hasRole("USER")
                     .anyRequest().authenticated() // 모든 요청에 체크 (권한 상관X)
             .and()

@@ -8,7 +8,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,31 +25,31 @@ public class BoardService {
         return boardRepository.save(toEntity(boardDto)).getId();
     }
 
-    // 글 리스트 및 페이징
-    @Transactional
-    public List<BoardDto> getBoardList(Pageable pageable) {
-        Page<Board> boardList = boardRepository.findAll(pageable);
-        List<BoardDto> boardDtoList = new ArrayList<>();
+    // 리스트 및 페이징
+    public List<BoardDto> getBoardList(Pageable pageable){
+        Page<Board> boards = boardRepository.findAll(pageable);
+        List<BoardDto> boardList = new ArrayList<>();
 
-        for (Board board : boardList) {
-            boardDtoList.add(this.toDto(board));
+        for (Board board : boards){
+            boardList.add(this.toDto(board));
         }
-        return boardDtoList;
+        return boardList;
     }
 
-    // 글 검색
-    @Transactional
-    public List<BoardDto> searchPosts(String title, String content, Pageable pageable) {
-        Page<Board> boardList = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
-        List<BoardDto> boardDtoList = new ArrayList<>();
+    // 검색 페이징
+    public List<BoardDto> searchPosts(String title, String content, Pageable pageable){
+        Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
+        List<BoardDto> boardList = new ArrayList<>();
 
-        if (boardDtoList.isEmpty()) return boardDtoList;
+        if(boards.isEmpty()) return boardList;
 
-        for (Board board : boardList) {
-            boardDtoList.add(this.toDto(board));
+        for(Board board : boards){
+            boardList.add(this.toDto(board));
         }
-        return boardDtoList;
+
+        return boardList;
     }
+
 
     // 글 상세보기
     @Transactional
