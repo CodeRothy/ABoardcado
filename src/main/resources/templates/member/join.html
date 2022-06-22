@@ -17,7 +17,7 @@
 
     <script th:inline="javascript">
         $(document).ready(function(){
-            var errorMessage = [      [${errorMessage}]       ];
+            var errorMessage = [[${errorMessage}]];
             if(errorMessage != null){
                 alert(errorMessage);
             }
@@ -27,6 +27,7 @@
 
 <div layout:fragment="content">
     <div class="container">
+        <br>
         <h1 style="color:#5a5a5a"> Hello:) I'm ABoardcado!</h1>
         <br>
         <h6 style="color:green"> <b>Create account</b></h6>

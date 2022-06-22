@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     public Member saveMember(MemberDto memberDto) {
