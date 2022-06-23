@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -73,7 +75,9 @@ public class BoardController {
 
     // 글쓰기
     @GetMapping("/post")
-    public String post(BoardDto boardDto, Model model) {
+    public String post(BoardDto boardDto, User user, Model model) {
+        String authorName = user.getUsername();
+        model.addAttribute("authorName", authorName);
         model.addAttribute("board", boardDto);
 
         return "board/post";
