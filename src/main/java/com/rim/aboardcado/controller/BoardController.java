@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -75,21 +76,21 @@ public class BoardController {
 
     // 글쓰기
     @GetMapping("/post")
-    public String post(BoardDto boardDto, User user, Model model) {
-        String authorName = user.getUsername();
-        model.addAttribute("authorName", authorName);
+    public String post(BoardDto boardDto, Model model) {
+
         model.addAttribute("board", boardDto);
 
         return "board/post";
     }
 
     @PostMapping("/post")
-    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
+    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             return "board/post";
         }
         try {
-            boardService.savePost(boardDto);
+            BoardDto boardDto1 = new BoardDto(userDetails.getUsername(), boardDto.getTitle(), boardDto.getContent());
+            boardService.savePost(boardDto1);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -108,21 +109,21 @@ public class BoardController {
         return "board/edit";
     }
 
-    @PutMapping("/post/edit/{id}")
-    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "board/edit";
-        }
-        try {
-            boardService.savePost(boardDto);
-
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "board/edit";
-        }
-
-        return "redirect:/";
-    }
+//    @PutMapping("/post/edit/{id}")
+//    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
+//        if (bindingResult.hasErrors()) {
+//            return "board/edit";
+//        }
+//        try {
+//            boardService.savePost(boardDto);
+//
+//        } catch (IllegalStateException e) {
+//            model.addAttribute("errorMessage", e.getMessage());
+//            return "board/edit";
+//        }
+//
+//        return "redirect:/";
+//    }
 
 
     // 글 상세보기
