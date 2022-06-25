@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
+
 
     // 회원가입
     public Member saveMember(MemberDto memberDto) {
@@ -30,7 +33,17 @@ public class MemberService implements UserDetailsService {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
 
-        return memberRepository.save(memberDto.toEntity(memberDto));
+        return memberRepository.save(toEntity(memberDto));
+    }
+
+    // MemberDto -> Member
+    public Member toEntity(MemberDto memberDto) {
+        return Member.builder()
+                .name(memberDto.getName())
+                .password(passwordEncoder.encode(memberDto.getPassword()))
+                .email(memberDto.getEmail())
+                .role(Role.USER)
+                .build();
     }
 
     // 로그인
