@@ -1,6 +1,7 @@
 package com.rim.aboardcado.service;
 
 import com.rim.aboardcado.domain.entity.Board;
+import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,9 @@ public class BoardService {
 
     // 글 작성 저장
     @Transactional
-    public Long savePost(BoardDto boardDto) {
+    public Long savePost(BoardDto boardDto, String author) {
 
-        return boardRepository.save(boardDto.toEntity(boardDto)).getId();
+        return boardRepository.save(boardDto.toEntity(author)).getId();
     }
 
     // 리스트 및 페이징

@@ -31,9 +31,9 @@ public class Board {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member_id;
 
     @CreatedDate
     @Column(updatable = false)

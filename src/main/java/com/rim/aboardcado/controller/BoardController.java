@@ -1,6 +1,7 @@
 package com.rim.aboardcado.controller;
 
 import com.rim.aboardcado.domain.entity.Board;
+import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.service.BoardService;
@@ -84,15 +85,15 @@ public class BoardController {
 
         return "board/post";
     }
-
+    //
     @PostMapping("/post")
-    public String write(@Valid BoardDto boardDto, BindingResult bindingResult,  @AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             return "board/post";
         }
         try {
             String author = userDetails.getUsername();
-            boardService.savePost(boardDto);
+            boardService.savePost(boardDto, author);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
