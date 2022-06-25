@@ -36,15 +36,16 @@ public class SecurityConfig  {
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/")
-//            .and()
-//                    .exceptionHandling()
-//                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         ;
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
+
         return new BCryptPasswordEncoder();
     }
 
