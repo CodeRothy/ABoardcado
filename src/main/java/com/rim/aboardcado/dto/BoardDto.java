@@ -1,6 +1,7 @@
 package com.rim.aboardcado.dto;
 
 import com.rim.aboardcado.domain.entity.Board;
+import com.rim.aboardcado.domain.entity.Member;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -24,6 +25,8 @@ public class BoardDto {
 
     @NotEmpty(message = "내용 입력은 필수입니다.")
     private String content;
+
+    //private int member_id;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
