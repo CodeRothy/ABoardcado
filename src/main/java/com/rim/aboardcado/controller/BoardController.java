@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 //@RequestMapping("/board")
@@ -105,6 +107,7 @@ public class BoardController {
 
 
     // 글 수정
+    @PreAuthorize("isAuthenticated() and (( #user.name == principal.name ) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model){
         BoardDto boardDto = boardService.postDtl(id);
@@ -112,21 +115,22 @@ public class BoardController {
         return "board/edit";
     }
 
-//    @PutMapping("/post/edit/{id}")
-//    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, Model model) {
-//        if (bindingResult.hasErrors()) {
-//            return "board/edit";
-//        }
-//        try {
-//            boardService.savePost(boardDto);
-//
-//        } catch (IllegalStateException e) {
-//            model.addAttribute("errorMessage", e.getMessage());
-//            return "board/edit";
-//        }
-//
-//        return "redirect:/";
-//    }
+    @PutMapping("/post/edit/{id}")
+    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, UserDetails userDetails, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "board/edit";
+        }
+        try {
+            String author = userDetails.getUsername();
+            boardService.savePost(boardDto, author );
+
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "board/edit";
+        }
+
+        return "redirect:/";
+    }
 
 
     // 글 상세보기
