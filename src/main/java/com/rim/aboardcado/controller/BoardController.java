@@ -89,12 +89,14 @@ public class BoardController {
     }
     //
     @PostMapping("/post")
-    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, Principal principal, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             return "board/post";
         }
         try {
             String author = userDetails.getUsername();
+            int id = userDetails.getId;
+            int id2 = principal.getId;
             boardService.savePost(boardDto, author);
 
         } catch (IllegalStateException e) {
