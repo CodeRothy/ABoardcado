@@ -3,6 +3,7 @@ package com.rim.aboardcado.controller;
 import com.rim.aboardcado.domain.entity.Board;
 import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.BoardRepository;
+import com.rim.aboardcado.domain.repository.MemberRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.service.BoardService;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -30,6 +32,7 @@ public class BoardController {
 
     private BoardService boardService;
     private BoardRepository boardRepository;
+    private MemberRepository memberRepository;
 
 
     // 리스트 페이징
@@ -89,14 +92,12 @@ public class BoardController {
     }
     //
     @PostMapping("/post")
-    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, Principal principal, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String write(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             return "board/post";
         }
         try {
             String author = userDetails.getUsername();
-            int id = userDetails.getId;
-            int id2 = principal.getId;
             boardService.savePost(boardDto, author);
 
         } catch (IllegalStateException e) {
@@ -109,7 +110,7 @@ public class BoardController {
 
 
     // 글 수정
-    @PreAuthorize("isAuthenticated() and (( #user.name == principal.name ) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() and (( #member.name == principal.name ) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model){
         BoardDto boardDto = boardService.postDtl(id);

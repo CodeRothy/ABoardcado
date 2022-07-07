@@ -5,9 +5,11 @@ import com.rim.aboardcado.domain.entity.Member;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.ForeignKey;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
+@Setter
 @Builder
 @Getter
 @ToString
@@ -30,7 +32,9 @@ public class BoardDto {
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private Member member_id;
+
+
+    private Member member;
 
     // BoardDto -> Board
     public Board toEntity(String author) {
@@ -39,7 +43,7 @@ public class BoardDto {
                 .author(author)
                 .title(title)
                 .content(content)
-                .member_id(member_id)
+                .member(member)
                 .build();
         return build;
     }

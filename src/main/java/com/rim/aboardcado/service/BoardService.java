@@ -79,7 +79,7 @@ public class BoardService {
                 .content(board.getContent())
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
-                .member_id(board.getMember_id())
+                .member(board.getMember())
                 .build();
     }
 

@@ -54,10 +54,20 @@ public class MemberService implements UserDetailsService {
         if (member == null) {
             throw new UsernameNotFoundException(email);
         }
+
         return User.builder()
                 .username(member.getName())
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
     }
+
+//    // id 찾기
+//    public int findId(String email){
+//
+//        int memberId = memberRepository.findByEmail(email).getId().intValue();
+//
+//        return memberId;
+//    }
+
 }
