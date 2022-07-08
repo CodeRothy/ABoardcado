@@ -3,6 +3,7 @@ package com.rim.aboardcado.service;
 import com.rim.aboardcado.domain.entity.Board;
 import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.BoardRepository;
+import com.rim.aboardcado.domain.repository.MemberRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
@@ -79,7 +80,7 @@ public class BoardService {
                 .content(board.getContent())
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
-                .member(board.getMember())
+  //              .member(board.getMember())
                 .build();
     }
 

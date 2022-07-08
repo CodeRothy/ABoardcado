@@ -33,7 +33,7 @@ public class Board {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @CreatedDate
@@ -43,5 +43,9 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
+    public Long memberId(Member member) {
+        Long memberId = member.getId();
+        return memberId;
+    }
 
 }
