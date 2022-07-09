@@ -13,16 +13,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 //@RequestMapping("/board")
@@ -32,8 +29,7 @@ public class BoardController {
 
     private BoardService boardService;
     private BoardRepository boardRepository;
-    private MemberRepository memberRepository;
-
+    private Member member;
 
     // 리스트 페이징
     @GetMapping("/")
@@ -98,7 +94,7 @@ public class BoardController {
         }
         try {
             String author = userDetails.getUsername();
-            boardService.savePost(boardDto, author);
+            boardService.savePost(boardDto, author, member);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -125,7 +121,7 @@ public class BoardController {
         }
         try {
             String author = userDetails.getUsername();
-            boardService.savePost(boardDto, author );
+            boardService.savePost(boardDto, author, member);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());

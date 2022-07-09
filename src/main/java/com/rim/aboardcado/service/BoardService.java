@@ -22,9 +22,9 @@ public class BoardService {
 
     // 글 작성 저장
     @Transactional
-    public Long savePost(BoardDto boardDto, String author) {
-
-        return boardRepository.save(boardDto.toEntity(author)).getId();
+    public Long savePost(BoardDto boardDto, String author, Member member) {
+        boardDto.setMember(member);
+        return boardRepository.save(boardDto.toEntity(author, member)).getId();
     }
 
     // 리스트 및 페이징

@@ -36,7 +36,7 @@ public class BoardDto {
     private Member member;
 
     // BoardDto -> Board
-    public Board toEntity(String author) {
+    public Board toEntity(String author, Member member) {
         Board build = Board.builder()
                 .id(id)
                 .author(author)
