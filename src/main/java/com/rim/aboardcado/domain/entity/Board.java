@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Setter
+
 @Builder
 @Getter
 @Entity
@@ -41,5 +41,7 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-
+    public void setMember (Member member) {
+        this.id= member.getId();
+    }
 }

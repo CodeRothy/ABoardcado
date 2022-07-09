@@ -23,7 +23,7 @@ public class BoardService {
     // 글 작성 저장
     @Transactional
     public Long savePost(BoardDto boardDto, String author, Member member) {
-        boardDto.setMember(member);
+
         return boardRepository.save(boardDto.toEntity(author, member)).getId();
     }
 
@@ -80,7 +80,6 @@ public class BoardService {
                 .content(board.getContent())
                 .createdDate(board.getCreatedDate())
                 .modifiedDate(board.getModifiedDate())
-                .member(board.getMember())
                 .build();
     }
 

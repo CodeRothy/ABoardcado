@@ -33,7 +33,6 @@ public class BoardDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-    private Member member;
 
     // BoardDto -> Board
     public Board toEntity(String author, Member member) {
