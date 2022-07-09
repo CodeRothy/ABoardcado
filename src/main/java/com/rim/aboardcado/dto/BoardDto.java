@@ -33,7 +33,7 @@ public class BoardDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
-//    private Member member;
+    private Member member;
 
     // BoardDto -> Board
     public Board toEntity(String author) {
@@ -42,7 +42,7 @@ public class BoardDto {
                 .author(author)
                 .title(title)
                 .content(content)
-        //        .member(member)
+                .member(member)
                 .build();
         return build;
     }

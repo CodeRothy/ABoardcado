@@ -1,11 +1,9 @@
 package com.rim.aboardcado.domain.entity;
 
-import com.rim.aboardcado.dto.BoardDto;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -43,9 +41,5 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    public Long memberId(Member member) {
-        Long memberId = member.getId();
-        return memberId;
-    }
 
 }
