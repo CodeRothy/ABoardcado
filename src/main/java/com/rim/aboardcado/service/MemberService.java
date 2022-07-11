@@ -36,16 +36,6 @@ public class MemberService implements UserDetailsService {
         return memberRepository.save(toEntity(memberDto));
     }
 
-    // MemberDto -> Member
-    public Member toEntity(MemberDto memberDto) {
-        return Member.builder()
-                .name(memberDto.getName())
-                .password(passwordEncoder.encode(memberDto.getPassword()))
-                .email(memberDto.getEmail())
-                .role(Role.USER)
-                .build();
-    }
-
     // 로그인
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -56,18 +46,28 @@ public class MemberService implements UserDetailsService {
         }
 
         return User.builder()
-                .username(member.getName())
+                .username(member.getEmail())
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
     }
 
-//    // id 찾기
-//    public int findId(String email){
-//
-//        int memberId = memberRepository.findByEmail(email).getId().intValue();
-//
-//        return memberId;
-//    }
+    // email 로 user 정보찾기
+    public Member findByEmail(String email) {
+
+        Member member = memberRepository.findByEmail(email);
+
+        return member;
+    }
+
+    // MemberDto -> Member
+    public Member toEntity(MemberDto memberDto) {
+        return Member.builder()
+                .name(memberDto.getName())
+                .password(passwordEncoder.encode(memberDto.getPassword()))
+                .email(memberDto.getEmail())
+                .role(Role.USER)
+                .build();
+    }
 
 }

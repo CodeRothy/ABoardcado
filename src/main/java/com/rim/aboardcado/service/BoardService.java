@@ -23,10 +23,16 @@ public class BoardService {
 
     // 글 작성 저장
     @Transactional
-    public Long savePost(BoardDto boardDto, String author) {
+    public Long savePost(BoardDto boardDto, String email) {
 
-        Member member = memberRepository.findByName(author);
-        Board board = Board.setMemberId(member);
+        // 현재 로그인 사용자 email 로 찾아 Member 불러오기
+        Member member = memberRepository.findByEmail(email);
+
+        // 사용자 id 찾아 글에 넣기 // 왜 뻈는데 되지...
+       // Board board = Board.setMemberId(member);
+
+        // 작성자 이름 고정
+        String author = member.getName();
 
         return boardRepository.save(boardDto.toEntity(author, member)).getId();
     }

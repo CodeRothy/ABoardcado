@@ -1,11 +1,10 @@
 package com.rim.aboardcado.controller;
 
 import com.rim.aboardcado.domain.entity.Board;
-import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.BoardRepository;
-import com.rim.aboardcado.domain.repository.MemberRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.service.BoardService;
+import com.rim.aboardcado.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,8 @@ public class BoardController {
 
     private BoardService boardService;
     private BoardRepository boardRepository;
-    private Member member;
+    private MemberService memberService;
+
 
     // 리스트 페이징
     @GetMapping("/")
@@ -81,7 +81,8 @@ public class BoardController {
     @GetMapping("/post")
     public String post(BoardDto boardDto, @AuthenticationPrincipal UserDetails userDetails, Model model) {
 
-        String author = userDetails.getUsername();
+        String author = memberService.findByEmail(userDetails.getUsername()).getName();
+
         model.addAttribute("author", author);
         model.addAttribute("board", boardDto);
 
@@ -90,14 +91,13 @@ public class BoardController {
     //
     @PostMapping("/post")
     public String write(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+
         if (bindingResult.hasErrors()) {
             return "board/post";
         }
         try {
-            String author = userDetails.getUsername();
-//            String email = principal.getName();
-//            System.out.println("이름, 이메일"+ author + email);
-            boardService.savePost(boardDto, author);
+            String email = userDetails.getUsername();
+            boardService.savePost(boardDto, email);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -109,7 +109,7 @@ public class BoardController {
 
 
     // 글 수정
-    @PreAuthorize("isAuthenticated() and (( #member.name == principal.name ) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() and (( #member.email == principal.name ) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model){
         BoardDto boardDto = boardService.postDtl(id);
@@ -118,13 +118,13 @@ public class BoardController {
     }
 
     @PutMapping("/post/edit/{id}")
-    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, UserDetails userDetails, Model model) {
+    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {
             return "board/edit";
         }
         try {
-            String author = userDetails.getUsername();
-            boardService.savePost(boardDto, author);
+            String email = userDetails.getUsername();
+            boardService.savePost(boardDto, email);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
