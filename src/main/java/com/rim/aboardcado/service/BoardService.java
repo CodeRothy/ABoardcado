@@ -19,10 +19,14 @@ import java.util.List;
 public class BoardService {
 
     private BoardRepository boardRepository;
+    private MemberRepository memberRepository;
 
     // 글 작성 저장
     @Transactional
-    public Long savePost(BoardDto boardDto, String author, Member member) {
+    public Long savePost(BoardDto boardDto, String author) {
+
+        Member member = memberRepository.findByName(author);
+        Board board = Board.setMemberId(member);
 
         return boardRepository.save(boardDto.toEntity(author, member)).getId();
     }

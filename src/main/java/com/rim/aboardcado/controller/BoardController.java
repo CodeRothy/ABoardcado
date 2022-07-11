@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 //@RequestMapping("/board")
@@ -94,7 +95,9 @@ public class BoardController {
         }
         try {
             String author = userDetails.getUsername();
-            boardService.savePost(boardDto, author, member);
+//            String email = principal.getName();
+//            System.out.println("이름, 이메일"+ author + email);
+            boardService.savePost(boardDto, author);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -121,7 +124,7 @@ public class BoardController {
         }
         try {
             String author = userDetails.getUsername();
-            boardService.savePost(boardDto, author, member);
+            boardService.savePost(boardDto, author);
 
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
