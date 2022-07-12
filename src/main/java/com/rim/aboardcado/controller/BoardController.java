@@ -109,7 +109,7 @@ public class BoardController {
 
 
     // 글 수정
-    @PreAuthorize("isAuthenticated() and (( #member.email == principal.name ) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() and (( #member.email == authentication.name ) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model){
         BoardDto boardDto = boardService.postDtl(id);
