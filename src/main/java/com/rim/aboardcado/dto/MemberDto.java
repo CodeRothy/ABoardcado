@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 public class MemberDto {
 
-    private final PasswordEncoder passwordEncoder;
-
     @NotEmpty
     @Length (min = 2, max = 10, message = "2 ~ 10자 사이만 가능합니다.")
     private String name;

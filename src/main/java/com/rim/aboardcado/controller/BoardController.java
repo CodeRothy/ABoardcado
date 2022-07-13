@@ -112,10 +112,10 @@ public class BoardController {
     // 글 수정
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model){
-        BoardDto boardDto = boardService.postDtl(id);
 
+        BoardDto boardDto = boardService.postDtl(id);
         String email = userDetails.getUsername();
-        //boardService.idCheck(boardDto, email);
+
         if (!boardService.idCheck(boardDto, email)){
             return "redirect:/post/{id}";
         }
@@ -154,8 +154,15 @@ public class BoardController {
 
     // 글 삭제
     @DeleteMapping("/post/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id, BoardDto boardDto, @AuthenticationPrincipal UserDetails userDetails ) {
+
+//        String email = userDetails.getUsername();
+
+//        if (!boardService.idCheck(boardDto, email)){
+//            return "redirect:/post/{id}";
+//        }
         boardService.deletePost(id);
+    //    Board.setMemberId(null);
         return "redirect:/";
     }
 

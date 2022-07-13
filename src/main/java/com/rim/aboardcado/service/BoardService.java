@@ -28,9 +28,6 @@ public class BoardService {
         // 현재 로그인 사용자 email 로 찾아 Member 불러오기
         Member member = memberRepository.findByEmail(email);
 
-        // 사용자 id 찾아 글에 넣기 // 왜 뻈는데 되지...
-       // Board board = Board.setMemberId(member);
-
         // 작성자 이름 고정
         String author = member.getName();
 
@@ -75,9 +72,11 @@ public class BoardService {
     // 글 삭제
     @Transactional
     public void deletePost(Long id) {
+
         boardRepository.deleteById(id);
     }
 
+    // 로그인 회원과 board 작성자 동일 체크
     public boolean idCheck(BoardDto boardDto, String email) {
 
         Long authorId = boardRepository.findById(boardDto.getId()).get().getMember().getId();

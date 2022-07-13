@@ -41,14 +41,5 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
 
-    public static Board setMemberId (Member member) {
-        Board board = new Board();
-        board.setMember(member);
-
-        return board;
-    }
 }
