@@ -5,6 +5,7 @@
 
 <div layout:fragment="content">
     <div class="container">
+<!--        <div>contents : <span th:text="${boardList.totalElements}"></span></div> -->
         <table class="table">
             <thead class="thead-light">
             <tr class="text-center">
@@ -33,6 +34,7 @@
             </tr>
             </tbody>
         </table>
+
         <div class="page">
             <ul class="pagination justify-content-center pagination-green" >
 
@@ -43,7 +45,8 @@
 
                 <!-- 현재 페이지 및 블럭 -->
                 <li class="page-item" th:classappend="${page == nowPage }? 'active'" th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <a th:href="@{/(page=${page-1})}" class="page-link" th:text="${page}" >1</a>
+                    <span th:if="${page!=0}" a th:href="@{/(page=${page-1})}" class="page-link" th:text="${page}" >1</a>
+                    </span>
                 </li>
 
                 <!-- 다음 페이지 버튼-->
@@ -53,11 +56,13 @@
 
             </ul>
         </div>
+
         <div class="row">
             <div class="col-auto mr-auto"></div>
             <div class="col-auto">
                 <a class="btn btn-success" th:href="@{/post}" role="button">글쓰기</a>
             </div>
         </div>
+
     </div>
 </div>

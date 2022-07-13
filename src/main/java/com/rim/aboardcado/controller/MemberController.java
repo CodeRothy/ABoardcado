@@ -38,7 +38,7 @@ public class MemberController {
             return "member/join";
         }
 
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @GetMapping("/login")

@@ -9,16 +9,21 @@
             <div class="card-body">
                 <h5 class="card-title" th:text="${board.title} + ' - ' + ${board.author}"></h5>
                 <p class="card-text"><small class="text-muted" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></small></p>
+                <hr>
+                <br>
                 <p class="card-text" th:text="${board.content}"></p>
+                <br>
             </div>
         </div>
 
         <form id="delete-form" th:action="@{'/post/' + ${board.id}}" method="post">
             <div class="row mt-3">
-                <div class="col-auto">
-                    <a class="btn btn-info" th:href="@{'/post/edit/' + ${board.id}}" role="button">수정</a>
-                    <input type="hidden" name="_method" value="delete"/>
-                    <button id="delete-btn" type="submit" class="btn btn-danger">삭제</button>
+                <div th:if="${memberChk}">
+                    <div class="col-auto">
+                        <a class="btn btn-info" th:href="@{'/post/edit/' + ${board.id}}" role="button">수정</a>
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button id="delete-btn" type="submit" class="btn btn-danger">삭제</button>
+                    </div>
                 </div>
                 <div class="col-left mr-auto"></div>
                 <div class="col-auto">
@@ -26,7 +31,6 @@
                 </div>
             </div>
         </form>
-
     </div>
 </div>
 </html>

@@ -63,8 +63,10 @@ public class BoardController {
         List<BoardDto> boardList = boardService.searchPosts(keyword, keyword, pageable);
 
         int nowPage = boards.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(nowPage - 4, 1);
+    //    int startPage = Math.max(nowPage - 4, 1);
+        int startPage = Math.max(1, nowPage - 4);
         int endPage = Math.min(nowPage + 5, boards.getTotalPages());
+    //    int endPage = Math.min(nowPage + 5, boards.getTotalPages());
         int totalPages = boards.getTotalPages();
 
         model.addAttribute("Keyword", keyword);
@@ -145,8 +147,15 @@ public class BoardController {
 
     // 글 상세보기
     @GetMapping("/post/{id}")
-    public String detail(@PathVariable("id") Long id, Model model) {
+    public String detail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         BoardDto boardDto = boardService.postDtl(id);
+
+        String email = userDetails.getUsername();
+
+        if (boardService.idCheck(boardDto, email)){
+            model.addAttribute("memberChk", "OK");
+        }
+
         model.addAttribute("board", boardDto);
         return "board/detail";
     }
@@ -156,13 +165,13 @@ public class BoardController {
     @DeleteMapping("/post/{id}")
     public String delete(@PathVariable("id") Long id, BoardDto boardDto, @AuthenticationPrincipal UserDetails userDetails ) {
 
-//        String email = userDetails.getUsername();
+        String email = userDetails.getUsername();
 
-//        if (!boardService.idCheck(boardDto, email)){
-//            return "redirect:/post/{id}";
-//        }
+        if (!boardService.idCheck(boardDto, email)){
+            return "redirect:/post/{id}";
+        }
         boardService.deletePost(id);
-    //    Board.setMemberId(null);
+
         return "redirect:/";
     }
 
