@@ -96,6 +96,7 @@ public class BoardController {
             return "board/post";
         }
         try {
+            // UserDetails 상속, username = email 을 override 해두었음 (MemberService)
             String email = userDetails.getUsername();
             boardService.savePost(boardDto, email);
 
@@ -109,14 +110,21 @@ public class BoardController {
 
 
     // 글 수정
-    @PreAuthorize("isAuthenticated() and (( #member.email == authentication.name ) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/post/edit/{id}")
-    public String edit(@PathVariable("id") Long id, Model model){
+    public String edit(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model){
         BoardDto boardDto = boardService.postDtl(id);
+
+        String email = userDetails.getUsername();
+        //boardService.idCheck(boardDto, email);
+        if (!boardService.idCheck(boardDto, email)){
+            return "redirect:/post/{id}";
+        }
+
         model.addAttribute("board", boardDto);
         return "board/edit";
     }
 
+    //@PreAuthorize("isAuthenticated() and (( # == authentication.name ) or hasRole('ROLE_ADMIN'))")
     @PutMapping("/post/edit/{id}")
     public String update(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (bindingResult.hasErrors()) {

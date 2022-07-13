@@ -78,6 +78,16 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
+    public boolean idCheck(BoardDto boardDto, String email) {
+
+        Long authorId = boardRepository.findById(boardDto.getId()).get().getMember().getId();
+        Long memberId = memberRepository.findByEmail(email).getId();
+
+        if (authorId != memberId) {
+            return false;
+        }
+        return true;
+    }
 
 
     // Board -> boardDto 빌더패턴
@@ -92,5 +102,6 @@ public class BoardService {
                 .modifiedDate(board.getModifiedDate())
                 .build();
     }
+
 
 }
