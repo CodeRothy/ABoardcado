@@ -5,11 +5,9 @@ import com.rim.aboardcado.domain.entity.Member;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.ForeignKey;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
-@Setter
 @Builder
 @Getter
 @ToString
