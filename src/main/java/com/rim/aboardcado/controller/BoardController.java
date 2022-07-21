@@ -150,6 +150,7 @@ public class BoardController {
 
         String email = userDetails.getUsername();
 
+        // 수정, 삭제 버튼 표시를 위한 멤버체크
         if (boardService.idCheck(boardDto, email)){
             model.addAttribute("memberChk", "OK");
         }
