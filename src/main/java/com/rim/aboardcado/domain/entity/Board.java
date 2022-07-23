@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 
 @Builder
@@ -40,6 +42,11 @@ public class Board {
 
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+    // 댓글 List
+    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OrderBy("CommentId desc")
+    private List<Comment> commentList;
 
 
 }

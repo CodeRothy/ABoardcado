@@ -61,10 +61,8 @@ public class BoardController {
         List<BoardDto> boardList = boardService.searchPosts(keyword, keyword, pageable);
 
         int nowPage = boards.getPageable().getPageNumber() + 1;
-    //    int startPage = Math.max(nowPage - 4, 1);
         int startPage = Math.max(1, nowPage - 4);
         int endPage = Math.min(nowPage + 5, boards.getTotalPages());
-    //    int endPage = Math.min(nowPage + 5, boards.getTotalPages());
         int totalPages = boards.getTotalPages();
 
         model.addAttribute("Keyword", keyword);
