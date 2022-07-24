@@ -172,4 +172,8 @@ public class BoardController {
         return "redirect:/";
     }
 
-}
+    @PostMapping("/detail/{id}")
+    public String reviewSave(@PathVariable("id") Long id, @Valid ReviewDto reviewDto, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    }
+
+    }
