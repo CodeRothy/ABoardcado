@@ -45,8 +45,8 @@
 
                 <!-- 현재 페이지 및 블럭 -->
                 <li class="page-item" th:classappend="${page == nowPage }? 'active'" th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                    <span th:if="${page!=0}" a th:href="@{/(page=${page-1})}" class="page-link" th:text="${page}" >1</a>
-                    </span>
+                    <a th:if="${page!=0}" a th:href="@{/(page=${page-1})}" class="page-link" th:text="${page}" >1</a>
+                    </a>
                 </li>
 
                 <!-- 다음 페이지 버튼-->

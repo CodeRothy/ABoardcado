@@ -45,7 +45,7 @@ public class Board {
 
     // 댓글 List
     @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @OrderBy("CommentId desc")
+    @OrderBy("comment_id desc")
     private List<Comment> commentList;
 
 

@@ -3,7 +3,9 @@ package com.rim.aboardcado.controller;
 import com.rim.aboardcado.domain.entity.Board;
 import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.dto.BoardDto;
+import com.rim.aboardcado.dto.CommentDto;
 import com.rim.aboardcado.service.BoardService;
+import com.rim.aboardcado.service.CommentService;
 import com.rim.aboardcado.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ public class BoardController {
     private BoardService boardService;
     private BoardRepository boardRepository;
     private MemberService memberService;
+    private CommentService commentService;
 
 
     // 리스트 페이징
@@ -106,6 +109,34 @@ public class BoardController {
         return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
+    // 댓글쓰기
+    @PostMapping("/post/{id}")
+    public String commentWrite(@PathVariable("id") Long id, CommentDto commentDto, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+
+        String email = userDetails.getUsername();
+        commentService.saveComment(commentDto, email, id);
+
+
+        return "redirect:/post/{id}";
+    }
+
+
+    // 글 상세보기
+    @GetMapping("/post/{id}")
+    public String detail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        BoardDto boardDto = boardService.postDtl(id);
+
+        String email = userDetails.getUsername();
+
+        // 수정, 삭제 버튼 표시를 위한 멤버체크
+        if (boardService.idCheck(boardDto, email)){
+            model.addAttribute("memberChk", "OK");
+        }
+
+        model.addAttribute("board", boardDto);
+        return "board/detail";
+    }
+
 
     // 글 수정
     @GetMapping("/post/edit/{id}")
@@ -141,22 +172,6 @@ public class BoardController {
     }
 
 
-    // 글 상세보기
-    @GetMapping("/post/{id}")
-    public String detail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
-        BoardDto boardDto = boardService.postDtl(id);
-
-        String email = userDetails.getUsername();
-
-        // 수정, 삭제 버튼 표시를 위한 멤버체크
-        if (boardService.idCheck(boardDto, email)){
-            model.addAttribute("memberChk", "OK");
-        }
-
-        model.addAttribute("board", boardDto);
-        return "board/detail";
-    }
-
 
     // 글 삭제
     @DeleteMapping("/post/{id}")
@@ -172,8 +187,5 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @PostMapping("/detail/{id}")
-    public String reviewSave(@PathVariable("id") Long id, @Valid ReviewDto reviewDto, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-    }
 
     }
