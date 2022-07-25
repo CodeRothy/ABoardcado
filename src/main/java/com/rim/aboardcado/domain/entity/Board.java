@@ -44,7 +44,7 @@ public class Board {
     private LocalDateTime modifiedDate;
 
     // 댓글 List
-    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("comment_id desc")
     private List<Comment> commentList;
 

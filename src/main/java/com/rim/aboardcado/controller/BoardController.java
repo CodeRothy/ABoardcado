@@ -1,7 +1,10 @@
 package com.rim.aboardcado.controller;
 
 import com.rim.aboardcado.domain.entity.Board;
+import com.rim.aboardcado.domain.entity.Comment;
 import com.rim.aboardcado.domain.repository.BoardRepository;
+import com.rim.aboardcado.domain.repository.CommentRepository;
+import com.rim.aboardcado.domain.repository.MemberRepository;
 import com.rim.aboardcado.dto.BoardDto;
 import com.rim.aboardcado.dto.CommentDto;
 import com.rim.aboardcado.service.BoardService;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 //@RequestMapping("/board")
 @Controller
@@ -30,7 +34,9 @@ public class BoardController {
     private BoardService boardService;
     private BoardRepository boardRepository;
     private MemberService memberService;
+    private MemberRepository memberRepository;
     private CommentService commentService;
+    private CommentRepository commentRepository;
 
 
     // 리스트 페이징
@@ -78,7 +84,7 @@ public class BoardController {
         return "board/list";
     }
 
-    // 글쓰기
+    // 글쓰기 페이지
     @GetMapping("/post")
     public String post(BoardDto boardDto, @AuthenticationPrincipal UserDetails userDetails, Model model) {
 
@@ -89,7 +95,7 @@ public class BoardController {
 
         return "board/post";
     }
-    //
+    // 글 쓰기 로직
     @PostMapping("/post")
     public String write(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
 
@@ -124,14 +130,34 @@ public class BoardController {
     // 글 상세보기
     @GetMapping("/post/{id}")
     public String detail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+
+        // 게시글 정보
         BoardDto boardDto = boardService.postDtl(id);
 
+        // 로그인 회원 정보
         String email = userDetails.getUsername();
+
+        // 댓글 정보
+        List<Comment> commentList = boardRepository.findById(id).get().getCommentList();
+        System.out.println("commentList if문 타기 전 : "+commentList);
+
+        if (commentList !=null && !commentList.isEmpty()) {
+
+//                // 수정, 삭제 버튼 표시를 위한 멤버체크
+//                Long memberId = memberRepository.findByEmail(email).getId();
+//                if (boardService.idCheck(boardDto, email)) {
+//                    model.addAttribute("memberChk", "OK");
+//                }
+            System.out.println("commentList if문 : "+commentList);
+            model.addAttribute("commentList", commentList);
+        }
+
 
         // 수정, 삭제 버튼 표시를 위한 멤버체크
         if (boardService.idCheck(boardDto, email)){
             model.addAttribute("memberChk", "OK");
         }
+
 
         model.addAttribute("board", boardDto);
         return "board/detail";
@@ -156,6 +182,7 @@ public class BoardController {
     //@PreAuthorize("isAuthenticated() and (( # == authentication.name ) or hasRole('ROLE_ADMIN'))")
     @PutMapping("/post/edit/{id}")
     public String update(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+
         if (bindingResult.hasErrors()) {
             return "board/edit";
         }
@@ -188,4 +215,4 @@ public class BoardController {
     }
 
 
-    }
+}

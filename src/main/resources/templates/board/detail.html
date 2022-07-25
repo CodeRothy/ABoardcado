@@ -7,75 +7,79 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title" th:text="${board.title} + ' - ' + ${board.author}"></h5>
+                <h2 class="card-title" th:text="${board.title}"></h2>
+                <p class="card-text"><small class="text-muted" th:text="${board.author} + ' - ' + ${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></small></p>
+<!--
                 <p class="card-text"><small class="text-muted" th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></small></p>
+-->
                 <hr>
                 <br>
                 <p class="card-text" th:text="${board.content}"></p>
                 <br>
-            </div>
-        </div>
-
-        <form id="delete-form" th:action="@{'/post/' + ${board.id}}" method="post">
-            <div class="row mt-3">
-                <div th:if="${memberChk}">
-                    <div class="col-auto">
-                        <a class="btn btn-info" th:href="@{'/post/edit/' + ${board.id}}" role="button">수정</a>
-                        <input type="hidden" name="_method" value="delete"/>
-                        <button id="delete-btn" type="submit" class="btn btn-danger">삭제</button>
-                    </div>
-                </div>
-                <div class="col-left mr-auto"></div>
-                <div class="col-auto">
-                    <a class="btn btn-success" th:href="@{'/'}" role="button">목록</a>
-                </div>
-            </div>
-        </form>
-
-        <!-- 댓글글 -->
-        <div class="row">
-            <form th:action="@{'/post/' + ${board.id}}" method="post" class="form-horizontal" id="commentForm" role="form">
-                <div class="form-group">
-                    <label for="comment" class="col-sm-2 control-label">Comment</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" name="comment" id="comment" rows="5"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
-                    </div>
-                </div>
-            </form>
-            <div class="col-sm-10 col-sm-offset-1">
-                <div class="page-header">
-                    <h3 class="reviews">Leave your comment</h3>
-                </div>
-
-                <ul class="media-list">
-                    <li class="media">
-                        <div class="pull-left" >
-                        </div>
-                        <div class="media-body">
-                            <div class="well well-lg">
-                                <h4 class="media-heading text-uppercase reviews">Marco </h4>
-                                <ul class="media-date text-uppercase reviews list-inline">
-                                    <li class="dd">22</li>
-                                    <li class="mm">09</li>
-                                    <li class="aaaa">2014</li>
-                                </ul>
-                                <p class="media-comment">
-                                    Great snippet! Thanks for sharing.
-                                </p>
-                                <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
-                                <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#replyOne"><span class="glyphicon glyphicon-comment"></span> 2 comments</a>
+                <!-- 수정 , 삭제, 목록 이동 -->
+                <form id="delete-form" th:action="@{'/post/' + ${board.id}}" method="post">
+                    <div class="row mt-3">
+                        <div th:if="${memberChk}">
+                            <div class="col-auto">
+                                <a class="btn btn-info" th:href="@{'/post/edit/' + ${board.id}}" role="button">수정</a>
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button id="delete-btn" type="submit" class="btn btn-danger">삭제</button>
                             </div>
                         </div>
-                    </li>
-                </ul>
+                        <div class="col-left mr-auto"></div>
+                        <div class="col-auto">
+                            <a class="btn btn-success" th:href="@{'/'}" role="button">목록</a>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
 
+        <br>
+
+        <!-- 댓글글 -->
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Comment</h6>
+                <div class="form-group">
+                    <form th:action="@{'/post/' + ${board.id}}" method="post" role="form">
+                        <textarea class="form-control" name="comment" placeholder="댓글을 남겨주세요." rows="3"></textarea>
+                        <div class="row mt-3">
+                            <div class="col-auto mr-auto"></div>
+                            <div class="col-auto">
+                                <button class="btn btn-success" type="submit">등록</button>
+                            </div>
+                        </div>
+                        <hr>
+                    </form>
+                </div>
+
+                <div th:if="${commentList != null} or ${commentList.size() !=0}" th:each="comment:${commentList}">
+                    <div class="row mt-3">
+                        <div class="col-auto" >
+                            <p class="card-text"><b th:text="${comment.author}">Marco </b></p>
+                        </div>
+
+                        <div class="col-left mr-auto"></div>
+                        <div class="col-auto">
+                            <p class="card-text text-muted" th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">22</p>
+                        </div>
+                        <br>
+
+                        <div class="col-lg-12">
+                            <p class="" th:text="${comment.comment}">
+                                Great snippet! Thanks for sharing.
+                            </p>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+                <!-- 등록된 댓글 없을 때때 -->
+               <div th:if="${commentList == null} or ${commentList.size() ==0}">
+                    <h5>등록된 댓글이 없습니다.</h5>
+                </div>
+            </div>
+        </div>
    </div>
 </div>
 </html>

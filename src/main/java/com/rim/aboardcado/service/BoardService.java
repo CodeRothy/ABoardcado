@@ -63,8 +63,10 @@ public class BoardService {
     // 글 상세보기
     @Transactional
     public BoardDto postDtl(Long id) {
-        Board board = boardRepository.findById(id).get();
-
+        Board board = boardRepository.findById(id)
+                .orElseThrow(()-> {
+                    return new IllegalArgumentException("글을 찾을 수 없습니다");
+                });
         BoardDto boardDto = this.toDto(board);
         return boardDto;
     }
