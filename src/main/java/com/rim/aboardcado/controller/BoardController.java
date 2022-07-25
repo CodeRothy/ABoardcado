@@ -43,7 +43,7 @@ public class BoardController {
     @GetMapping("/")
     public String boardList(@PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, Model model){
         Page<Board> boards = boardRepository.findAll(pageable);
-        List<BoardDto> boardList = boardService.getBoardList(pageable);
+        List<Board> boardList = boardService.getBoardList(pageable);
 
         int nowPage = boards.getPageable().getPageNumber()+1;
         int startPage = Math.max(nowPage-4,1);
@@ -67,7 +67,7 @@ public class BoardController {
                          @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC)
                                  Pageable pageable, Model model) {
         Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
-        List<BoardDto> boardList = boardService.searchPosts(keyword, keyword, pageable);
+        List<Board> boardList = boardService.searchPosts(keyword, keyword, pageable);
 
         int nowPage = boards.getPageable().getPageNumber() + 1;
         int startPage = Math.max(1, nowPage - 4);
@@ -132,7 +132,7 @@ public class BoardController {
     public String detail(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model) {
 
         // 게시글 정보
-        BoardDto boardDto = boardService.postDtl(id);
+        Board board = boardService.postDtl(id);
 
         // 로그인 회원 정보
         String email = userDetails.getUsername();
@@ -154,12 +154,12 @@ public class BoardController {
 
 
         // 수정, 삭제 버튼 표시를 위한 멤버체크
-        if (boardService.idCheck(boardDto, email)){
+        if (boardService.idCheck(id, email)){
             model.addAttribute("memberChk", "OK");
         }
 
 
-        model.addAttribute("board", boardDto);
+        model.addAttribute("board", board);
         return "board/detail";
     }
 
@@ -168,14 +168,14 @@ public class BoardController {
     @GetMapping("/post/edit/{id}")
     public String edit(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model){
 
-        BoardDto boardDto = boardService.postDtl(id);
+        Board board = boardService.postDtl(id);
         String email = userDetails.getUsername();
 
-        if (!boardService.idCheck(boardDto, email)){
+        if (!boardService.idCheck(id, email)){
             return "redirect:/post/{id}";
         }
 
-        model.addAttribute("board", boardDto);
+        model.addAttribute("board", board);
         return "board/edit";
     }
 
@@ -206,7 +206,7 @@ public class BoardController {
 
         String email = userDetails.getUsername();
 
-        if (!boardService.idCheck(boardDto, email)){
+        if (!boardService.idCheck(id, email)){
             return "redirect:/post/{id}";
         }
         boardService.deletePost(id);

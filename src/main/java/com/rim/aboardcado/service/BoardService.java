@@ -35,25 +35,25 @@ public class BoardService {
     }
 
     // 리스트 및 페이징
-    public List<BoardDto> getBoardList(Pageable pageable){
+    public List<Board> getBoardList(Pageable pageable){
         Page<Board> boards = boardRepository.findAll(pageable);
-        List<BoardDto> boardList = new ArrayList<>();
+        List<Board> boardList = new ArrayList<>();
 
         for (Board board : boards){
-            boardList.add(this.toDto(board));
+            boardList.add(board);
         }
         return boardList;
     }
 
     // 검색 페이징
-    public List<BoardDto> searchPosts(String title, String content, Pageable pageable){
+    public List<Board> searchPosts(String title, String content, Pageable pageable){
         Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
-        List<BoardDto> boardList = new ArrayList<>();
+        List<Board> boardList = new ArrayList<>();
 
         if(boards.isEmpty()) return boardList;
 
         for(Board board : boards){
-            boardList.add(this.toDto(board));
+            boardList.add(board);
         }
 
         return boardList;
@@ -62,13 +62,12 @@ public class BoardService {
 
     // 글 상세보기
     @Transactional
-    public BoardDto postDtl(Long id) {
+    public Board postDtl(Long id) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(()-> {
                     return new IllegalArgumentException("글을 찾을 수 없습니다");
                 });
-        BoardDto boardDto = this.toDto(board);
-        return boardDto;
+        return board;
     }
 
     // 글 삭제
@@ -79,29 +78,15 @@ public class BoardService {
     }
 
     // 로그인 회원과 board 작성자 동일 체크
-    public boolean idCheck(BoardDto boardDto, String email) {
+    public boolean idCheck(Long id, String email) {
 
-        Long authorId = boardRepository.findById(boardDto.getId()).get().getMember().getId();
+        Long authorId = boardRepository.findById(id).get().getMember().getId();
         Long memberId = memberRepository.findByEmail(email).getId();
 
         if (authorId != memberId) {
             return false;
         }
         return true;
-    }
-
-
-    // Board -> boardDto 빌더패턴
-    @Transactional
-    public BoardDto toDto(Board board) {
-        return BoardDto.builder()
-                .id(board.getId())
-                .author(board.getAuthor())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .createdDate(board.getCreatedDate())
-                .modifiedDate(board.getModifiedDate())
-                .build();
     }
 
 
