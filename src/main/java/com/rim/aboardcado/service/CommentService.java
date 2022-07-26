@@ -1,6 +1,7 @@
 package com.rim.aboardcado.service;
 
 import com.rim.aboardcado.domain.entity.Board;
+import com.rim.aboardcado.domain.entity.Comment;
 import com.rim.aboardcado.domain.entity.Member;
 import com.rim.aboardcado.domain.repository.BoardRepository;
 import com.rim.aboardcado.domain.repository.CommentRepository;
@@ -33,4 +34,11 @@ public class CommentService {
         });
     }
 
+    // 댓글 수정
+    @Transactional
+    public void comEdit(Long id, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(id).orElseThrow(()->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. "));
+        comment.update(commentDto.getComment());
+    }
 }

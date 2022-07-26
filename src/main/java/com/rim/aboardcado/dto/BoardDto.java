@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-@ToString
 public class BoardDto {
 
     private Long id;
@@ -26,7 +25,7 @@ public class BoardDto {
     @NotEmpty(message = "내용 입력은 필수입니다.")
     private String content;
 
-    private String author;
+    //private String author;
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;

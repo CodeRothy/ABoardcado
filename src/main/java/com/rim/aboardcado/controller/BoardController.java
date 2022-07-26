@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -57,7 +58,6 @@ public class BoardController {
         model.addAttribute("totalPages", totalPages);
 
         return "board/list";
-
 
     }
 
@@ -139,16 +139,14 @@ public class BoardController {
 
         // 댓글 정보
         List<Comment> commentList = boardRepository.findById(id).get().getCommentList();
-        System.out.println("commentList if문 타기 전 : "+commentList);
 
         if (commentList !=null && !commentList.isEmpty()) {
 
 //                // 수정, 삭제 버튼 표시를 위한 멤버체크
 //                Long memberId = memberRepository.findByEmail(email).getId();
-//                if (boardService.idCheck(boardDto, email)) {
-//                    model.addAttribute("memberChk", "OK");
+//                if (boardService.idCheck(id, email)) {
+//                    model.addAttribute("comMemberChk", "OK");
 //                }
-            System.out.println("commentList if문 : "+commentList);
             model.addAttribute("commentList", commentList);
         }
 
@@ -161,6 +159,14 @@ public class BoardController {
 
         model.addAttribute("board", board);
         return "board/detail";
+    }
+
+    // 댓글 수정
+    @PutMapping("/post/{id}/comment/{commentId}")
+    public ResponseEntity comEdit(@PathVariable("id") Long id,
+                                  @PathVariable("commentId")Long commentId, @RequestBody CommentDto commentDto, Model model) {
+        commentService.comEdit(commentId, commentDto);
+        return ResponseEntity.ok(commentId);
     }
 
 

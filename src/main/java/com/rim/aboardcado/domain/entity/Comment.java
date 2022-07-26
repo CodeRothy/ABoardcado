@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.awt.*;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Getter
 @Builder
@@ -39,6 +40,10 @@ public class Comment {
     private Member member;
 
 
+    /* 댓글 수정을 위한 setter */
+    public void update(String comment) {
+        this.comment = comment;
+    }
 
 
 }
