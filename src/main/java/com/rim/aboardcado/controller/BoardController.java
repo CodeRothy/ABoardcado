@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
 
 //@RequestMapping("/board")
 @Controller
@@ -116,16 +116,6 @@ public class BoardController {
         return "redirect:/"; // redirect 경로 확인 (requestMapping /board 포함하는지)
     }
 
-    // 댓글쓰기
-    //@PostMapping("/post/{id}")
-//    public String commentWrite(@PathVariable("id") Long id,CommentDto commentDto, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//
-//        String email = userDetails.getUsername();
-//        commentService.saveComment(commentDto, email, id);
-//
-//
-//        return "redirect:/post/{id}";
-//    }
 
     // 글 수정
     @GetMapping("/post/edit/{id}")
@@ -162,13 +152,6 @@ public class BoardController {
     }
 
 
-    // 댓글 수정
-    //@PutMapping("/post/{id}/comment/{commentId}")
-    public @ResponseBody ResponseEntity comEdit(@PathVariable("id") Long id,
-                                  @PathVariable("commentId")Long commentId, @RequestBody CommentDto commentDto) {
-        commentService.comEdit(commentId, commentDto);
-        return ResponseEntity.ok(commentId);
-    }
 
 
     // 글 상세보기
