@@ -11,6 +11,7 @@ import com.rim.aboardcado.service.BoardService;
 import com.rim.aboardcado.service.CommentService;
 import com.rim.aboardcado.service.MemberService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -116,14 +117,57 @@ public class BoardController {
     }
 
     // 댓글쓰기
-    @PostMapping("/post/{id}")
-    public String commentWrite(@PathVariable("id") Long id, CommentDto commentDto, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    //@PostMapping("/post/{id}")
+//    public String commentWrite(@PathVariable("id") Long id,CommentDto commentDto, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+//
+//        String email = userDetails.getUsername();
+//        commentService.saveComment(commentDto, email, id);
+//
+//
+//        return "redirect:/post/{id}";
+//    }
 
+    // 글 수정
+    @GetMapping("/post/edit/{id}")
+    public String edit(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model){
+
+        Board board = boardService.postDtl(id);
         String email = userDetails.getUsername();
-        commentService.saveComment(commentDto, email, id);
+
+        if (!boardService.idCheck(id, email)){
+            return "redirect:/post/{id}";
+        }
+
+        model.addAttribute("board", board);
+        return "board/edit";
+    }
+
+    //@PreAuthorize("isAuthenticated() and (( # == authentication.name ) or hasRole('ROLE_ADMIN'))")
+    @PutMapping("/post/edit/{id}")
+    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "board/edit";
+        }
+        try {
+            String email = userDetails.getUsername();
+            boardService.savePost(boardDto, email);
+
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "board/edit";
+        }
+
+        return "redirect:/";
+    }
 
 
-        return "redirect:/post/{id}";
+    // 댓글 수정
+    //@PutMapping("/post/{id}/comment/{commentId}")
+    public @ResponseBody ResponseEntity comEdit(@PathVariable("id") Long id,
+                                  @PathVariable("commentId")Long commentId, @RequestBody CommentDto commentDto) {
+        commentService.comEdit(commentId, commentDto);
+        return ResponseEntity.ok(commentId);
     }
 
 
@@ -161,48 +205,8 @@ public class BoardController {
         return "board/detail";
     }
 
-    // 댓글 수정
-    @PutMapping("/post/{id}/comment/{commentId}")
-    public ResponseEntity comEdit(@PathVariable("id") Long id,
-                                  @PathVariable("commentId")Long commentId, @RequestBody CommentDto commentDto, Model model) {
-        commentService.comEdit(commentId, commentDto);
-        return ResponseEntity.ok(commentId);
-    }
 
 
-    // 글 수정
-    @GetMapping("/post/edit/{id}")
-    public String edit(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails userDetails, Model model){
-
-        Board board = boardService.postDtl(id);
-        String email = userDetails.getUsername();
-
-        if (!boardService.idCheck(id, email)){
-            return "redirect:/post/{id}";
-        }
-
-        model.addAttribute("board", board);
-        return "board/edit";
-    }
-
-    //@PreAuthorize("isAuthenticated() and (( # == authentication.name ) or hasRole('ROLE_ADMIN'))")
-    @PutMapping("/post/edit/{id}")
-    public String update(@Valid BoardDto boardDto, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            return "board/edit";
-        }
-        try {
-            String email = userDetails.getUsername();
-            boardService.savePost(boardDto, email);
-
-        } catch (IllegalStateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "board/edit";
-        }
-
-        return "redirect:/";
-    }
 
 
 

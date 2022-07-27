@@ -40,6 +40,7 @@ public class Board {
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column
     private LocalDateTime modifiedDate;
 
     // 댓글 List

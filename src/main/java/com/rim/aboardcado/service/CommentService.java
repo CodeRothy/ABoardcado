@@ -22,8 +22,21 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     // 댓글 등록
+//    @Transactional
+//    public void saveComment(CommentDto commentDto, String email, Long id) {
+//
+//        Optional<Board> optBoard = boardRepository.findById(id);
+//        optBoard.ifPresent(selectBoard-> {
+//            Member member = memberRepository.findByEmail(email);
+//            String author = member.getName();
+//
+//            commentRepository.save(commentDto.toEntity(author, selectBoard, member));
+//        });
+//    }
+
+    // 댓글 등록
     @Transactional
-    public void saveComment(CommentDto commentDto, String email, Long id) {
+    public Long saveComment(CommentDto commentDto, String email, Long id) {
 
         Optional<Board> optBoard = boardRepository.findById(id);
         optBoard.ifPresent(selectBoard-> {
@@ -32,13 +45,14 @@ public class CommentService {
 
             commentRepository.save(commentDto.toEntity(author, selectBoard, member));
         });
+        return id;
     }
 
     // 댓글 수정
     @Transactional
     public void comEdit(Long id, CommentDto commentDto) {
-        Comment comment = commentRepository.findById(id).orElseThrow(()->
-                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. "));
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다. "));
         comment.update(commentDto.getComment());
     }
 }

@@ -2,9 +2,9 @@ package com.rim.aboardcado.domain.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.time.LocalDateTime;
 
 
@@ -28,6 +28,10 @@ public class Comment {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column
+    private LocalDateTime modifiedDate;
 
     // 원 게시글
     @ManyToOne

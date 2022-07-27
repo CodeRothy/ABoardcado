@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentDto {
 
     private Long commentId;
